@@ -4,13 +4,20 @@
 package org.gustini.library.meinEinkaufApi;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.BasicConfigurator;
 
@@ -66,29 +73,30 @@ import org.apache.log4j.BasicConfigurator;
 public class MeinEinkaufApiConnector
 {
     private final String apiKey;
-    private final String apiUrl;
-
+    private final String apiHost;
+    private final String username;
+    
     public String getApiKey()
     {
         return apiKey;
     }
 
-    public String getApiUrl()
-    {
-        return apiUrl;
-    }
+
 
     /**
      * @param apiKey
      * @param apiUrl
      */
     public MeinEinkaufApiConnector(
+                                   String username,
                                    String apiKey,
-                                   String apiUrl)
+                                   String apiHost
+                                   )
     {
         super();
+        this.username = username; 
         this.apiKey = apiKey;
-        this.apiUrl = apiUrl;
+        this.apiHost = apiHost;
         BasicConfigurator.configure();
     }
 
@@ -101,26 +109,62 @@ public class MeinEinkaufApiConnector
      *         Creation: 11.06.2019 by mst
      * @throws IOException
      */
-    public String sendRequest(String jsonString) throws IOException
+    public String sendRequest(final String jsonString, final String param) throws IOException
     {
         String responseString = null;
-        /*
-         * SET Authentication
-         */
-        HttpGet request = new HttpGet(this.apiUrl);
-        String auth = "api" + ":" + this.apiUrl;
-        byte[] encodedAuth = Base64.encodeBase64(
-          auth.getBytes(StandardCharsets.UTF_8));
-        String authHeader = "Basic " + new String(encodedAuth);
-        request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = client.execute(request);
+        HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                new UsernamePasswordCredentials("api", this.apiKey));
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println(response.getStatusLine());
-        return response.getStatusLine().toString();
+        // Create AuthCache instance
+        AuthCache authCache = new BasicAuthCache();
+        // Generate BASIC scheme object and add it to the local auth cache
+        BasicScheme basicAuth = new BasicScheme();
+        authCache.put(targetHost, basicAuth);
 
+        // Add AuthCache to the execution context
+        HttpClientContext context = HttpClientContext.create();
+        context.setCredentialsProvider(credsProvider);
+        context.setAuthCache(authCache);
+
+        HttpGet httpget = new HttpGet(param);
+        for (int i = 0; i < 3; i++) {
+            CloseableHttpResponse response = httpclient.execute(
+                    targetHost, httpget, context);
+            try {
+                HttpEntity entity = response.getEntity();
+                 responseString = response.getStatusLine().toString();
+                 System.out.println(responseString);
+            } finally {
+                response.close();
+            }
+        }
+        return responseString;
+
+    }
+
+
+
+    /**
+     * @return the apiHost
+     */
+    public String getApiHost()
+    {
+        return apiHost;
+    }
+
+
+
+    /**
+     * @return the username
+     */
+    public String getUsername()
+    {
+        return username;
     }
 
 }

@@ -22,12 +22,13 @@ public class MeinEinkaufApiConnectorTest
     @Test
     public void testSendRequest() throws Exception
     {
-        String apiTestUrl ="https://api.meineinkauf.ch/v1/echo/HelloWorld";
+        String apiTestUrl ="api.meineinkauf.ch";
+        String param =  "/v1/echo/HelloWorld";
         String apiKey = "MEINEINKAUF_TEST_API_KEY";
-        MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector(apiKey, apiTestUrl);
+        MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
         String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
-        String response = apiConnector.sendRequest(jsonString);
+        String response = apiConnector.sendRequest(jsonString, param);
         System.out.println(response);
     }
 
