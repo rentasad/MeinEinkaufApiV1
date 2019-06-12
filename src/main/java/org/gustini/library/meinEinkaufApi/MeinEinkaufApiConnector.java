@@ -4,26 +4,15 @@
 package org.gustini.library.meinEinkaufApi;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.http.HttpEntity;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.log4j.BasicConfigurator;
 
 /**
  * Gustini GmbH (2019)
@@ -100,6 +89,7 @@ public class MeinEinkaufApiConnector
         super();
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
+        BasicConfigurator.configure();
     }
 
     /**
@@ -114,52 +104,22 @@ public class MeinEinkaufApiConnector
     public String sendRequest(String jsonString) throws IOException
     {
         String responseString = null;
-        String httpUsername = "api";
-        String httpPassword = this.apiKey;
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope(this.apiUrl, 443), new UsernamePasswordCredentials(httpUsername, httpPassword));
-        CloseableHttpClient httpclient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
-        HttpPost httppost = new HttpPost(this.apiUrl);
+        /*
+         * SET Authentication
+         */
+        HttpGet request = new HttpGet(this.apiUrl);
+        String auth = "api" + ":" + this.apiUrl;
+        byte[] encodedAuth = Base64.encodeBase64(
+          auth.getBytes(StandardCharsets.UTF_8));
+        String authHeader = "Basic " + new String(encodedAuth);
+        request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
 
-        // Request parameters and other properties.
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        params.add(new BasicNameValuePair("api", this.apiKey));
-        // params.add(new BasicNameValuePair("param-2", "Hello!"));
-        httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpResponse response = client.execute(request);
 
-        try
-        {
-            HttpGet httpget = new HttpGet(this.apiUrl);
-
-            System.out.println("Executing request " + httpget.getRequestLine());
-            CloseableHttpResponse response = httpclient.execute(httpget);
-            try
-            {
-                System.out.println("----------------------------------------");
-                System.out.println(response.getStatusLine());
-                responseString = response.getStatusLine().toString();
-                System.out.println(EntityUtils.toString(response.getEntity()));
-            } finally
-            {
-                response.close();
-            }
-        } finally
-        {
-            httpclient.close();
-        }
-
-        // //Execute and get the response.
-        // HttpResponse response = httpclient.execute(httppost);
-        // HttpEntity entity = response.getEntity();
-        //
-        // if (entity != null) {
-        // try (InputStream instream = entity.getContent()) {
-        // // do something useful
-        // responseString = instream.toString();
-        // }
-        // }
-        // System.out.println(response.toString());
-        return responseString;
+        int statusCode = response.getStatusLine().getStatusCode();
+        System.out.println(response.getStatusLine());
+        return response.getStatusLine().toString();
 
     }
 

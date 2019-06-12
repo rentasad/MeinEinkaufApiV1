@@ -27,12 +27,5 @@ public class JsonBuilderTest
         System.out.println(jsonString);
     }
 
-    @Test
-    public void testGetObjectFromJsonString() throws Exception
-    {
-        Order order = OrderTest.getTestOrder();
-        String jsonString = JsonBuilder.getJsonStringFromObject(order);
-        JsonBuilder.getObjectFromJsonString(jsonString);
-    }
 
 }
