@@ -48,7 +48,8 @@ public class MeinEinkaufApiConnectorTest
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
         String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
-//        System.out.println(jsonString);
+        
+        System.out.println(jsonString);
         String responseString =apiConnector.sendPostRequest(jsonString, param);
         System.out.println(responseString);
     }

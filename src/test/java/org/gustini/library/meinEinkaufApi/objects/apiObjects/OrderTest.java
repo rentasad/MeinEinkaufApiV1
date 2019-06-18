@@ -48,6 +48,7 @@ public class OrderTest
         String houseNumber = "15a";
         String zip = "4155";
         String city = "Zürich";
+//        String city = "Z&uuml;rich";
         
         
         /*

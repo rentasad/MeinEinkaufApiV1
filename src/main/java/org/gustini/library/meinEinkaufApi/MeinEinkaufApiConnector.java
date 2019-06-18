@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.http.Header;
@@ -186,23 +188,31 @@ public class MeinEinkaufApiConnector
         context.setCredentialsProvider(credsProvider);
         context.setAuthCache(authCache);
         
-        StringEntity requestEntity = new StringEntity(jsonString);
-        requestEntity.setContentEncoding(ContentType.APPLICATION_JSON.getCharset().name());
-        requestEntity.setContentType(ContentType.APPLICATION_JSON.getMimeType() );
+        StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON.getCharset());
         HttpPost httpPost = new HttpPost(urlParam);
         httpPost.setEntity(requestEntity);
         for (int i = 0; i < 1; i++)
         {
-            System.out.println(requestEntity.getContentEncoding().getValue());
+            StringBuilder textBuilder = new StringBuilder();
+            try (Reader reader = new BufferedReader(new InputStreamReader
+              (requestEntity.getContent(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+                int c = 0;
+                while ((c = reader.read()) != -1) {
+                    textBuilder.append((char) c);
+                }
+            }
+            
+            
+            System.out.println(textBuilder.toString());
             CloseableHttpResponse response = httpclient.execute(targetHost, httpPost, context);
             try
             {
                 int statusCode;
                 statusCode = response.getStatusLine().getStatusCode();
-                if (StatusCodesEnum.getStatusCodesEnumFromStatusInteger(statusCode) == StatusCodesEnum.OK_200)
+                if (StatusCodesEnum.getStatusCodesEnumFromStatusInteger(statusCode) == StatusCodesEnum.CREATED_201)
                 {
 //                        HttpEntity responsEntity = response.getEntity();
-                        responseString = response.getEntity().getContent().toString();
+                        responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
                         System.out.println(responseString);
                 }else
                 {
