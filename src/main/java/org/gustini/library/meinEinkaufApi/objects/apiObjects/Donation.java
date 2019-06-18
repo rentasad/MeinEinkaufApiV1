@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+
+import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
 /**
  * Gustini GmbH (2019)
@@ -19,21 +21,21 @@ public class Donation
 {
     private final String name;
     private final double grossPrice;// Der Bruttopreis der Spende
-    private final VatRateEnum vatRateEnum;
+    private final VatRate vatRate;
     /**
      * @param name
      * @param grossPrice
-     * @param vatRateEnum
+     * @param vatRate
      */
     public Donation(
                     String name,
                     double grossPrice,
-                    VatRateEnum vatRateEnum)
+                    VatRate vatRate)
     {
         super();
         this.name = name;
         this.grossPrice = grossPrice;
-        this.vatRateEnum = vatRateEnum;
+        this.vatRate = vatRate;
     }
     /**
      * @return the name
@@ -50,11 +52,11 @@ public class Donation
         return grossPrice;
     }
     /**
-     * @return the vatRateEnum
+     * @return the vatRate
      */
-    public VatRateEnum getVatRateEnum()
+    public VatRate getVatRateEnum()
     {
-        return vatRateEnum;
+        return vatRate;
     }
     
 }

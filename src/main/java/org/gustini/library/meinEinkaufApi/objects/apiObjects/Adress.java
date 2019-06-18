@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+
+import org.gustini.library.meinEinkaufApi.objects.enums.Salutation;
 
 /**
  * Gustini GmbH (2019)
@@ -50,7 +52,7 @@ public class Adress
 {
 
     private String company;
-    private final SalutationEnum salutation;
+    private final Salutation salutation;
     private String title;
     private final String firstName;
     private final String lastName;
@@ -77,7 +79,7 @@ public class Adress
      * @param city
      */
     public Adress(
-                  SalutationEnum salutation,
+                  Salutation salutation,
                   String firstName,
                   String lastName,
                   String street,
@@ -194,7 +196,7 @@ public class Adress
     /**
      * @return the salutation
      */
-    public SalutationEnum getSalutation()
+    public Salutation getSalutation()
     {
         return salutation;
     }

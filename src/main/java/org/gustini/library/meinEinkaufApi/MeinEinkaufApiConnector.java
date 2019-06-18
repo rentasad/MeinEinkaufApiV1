@@ -3,8 +3,13 @@
  */
 package org.gustini.library.meinEinkaufApi;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -13,13 +18,20 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.BasicConfigurator;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.MeinEinkaufRequestException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Gustini GmbH (2019)
@@ -75,13 +87,11 @@ public class MeinEinkaufApiConnector
     private final String apiKey;
     private final String apiHost;
     private final String username;
-    
+
     public String getApiKey()
     {
         return apiKey;
     }
-
-
 
     /**
      * @param apiKey
@@ -90,11 +100,10 @@ public class MeinEinkaufApiConnector
     public MeinEinkaufApiConnector(
                                    String username,
                                    String apiKey,
-                                   String apiHost
-                                   )
+                                   String apiHost)
     {
         super();
-        this.username = username; 
+        this.username = username;
         this.apiKey = apiKey;
         this.apiHost = apiHost;
         BasicConfigurator.configure();
@@ -104,21 +113,19 @@ public class MeinEinkaufApiConnector
      * 
      * Description:
      * 
-     * @param jsonString
+     * @param urlParam
      * @return
-     *         Creation: 11.06.2019 by mst
      * @throws IOException
+     *             Creation: 11.06.2019 by mst
      */
-    public String sendRequest(final String jsonString, final String param) throws IOException
+    public String sendGetRequest(final String urlParam) throws IOException
     {
         String responseString = null;
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 
         HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                new UsernamePasswordCredentials("api", this.apiKey));
+        credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
 
         // Create AuthCache instance
         AuthCache authCache = new BasicAuthCache();
@@ -131,23 +138,87 @@ public class MeinEinkaufApiConnector
         context.setCredentialsProvider(credsProvider);
         context.setAuthCache(authCache);
 
-        HttpGet httpget = new HttpGet(param);
-        for (int i = 0; i < 3; i++) {
-            CloseableHttpResponse response = httpclient.execute(
-                    targetHost, httpget, context);
-            try {
+        HttpGet httpget = new HttpGet(urlParam);
+        for (int i = 0; i < 1; i++)
+        {
+            CloseableHttpResponse response = httpclient.execute(targetHost, httpget, context);
+            try
+            {
                 HttpEntity entity = response.getEntity();
-                 responseString = response.getStatusLine().toString();
-                 System.out.println(responseString);
-            } finally {
+                responseString = convertStreamToString(response.getEntity().getContent());
+                System.out.println(responseString);
+            } finally
+            {
                 response.close();
             }
         }
         return responseString;
-
     }
+    
+    /**
+     * 
+     * Description: 
+     * 
+     * @param jsonString
+     * @param urlParam
+     * @return
+     * @throws IOException
+     * @throws MeinEinkaufRequestException
+     * Creation: 17.06.2019 by mst
+     */
+    public String sendPostRequest(final String jsonString, final String urlParam) throws IOException, MeinEinkaufRequestException
+    {
+        String responseString = null;
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 
+        HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
 
+        // Create AuthCache instance
+        AuthCache authCache = new BasicAuthCache();
+        // Generate BASIC scheme object and add it to the local auth cache
+        BasicScheme basicAuth = new BasicScheme();
+        authCache.put(targetHost, basicAuth);
+
+        // Add AuthCache to the execution context
+        HttpClientContext context = HttpClientContext.create();
+        context.setCredentialsProvider(credsProvider);
+        context.setAuthCache(authCache);
+        
+        StringEntity requestEntity = new StringEntity(jsonString);
+        requestEntity.setContentEncoding(ContentType.APPLICATION_JSON.getCharset().name());
+        requestEntity.setContentType(ContentType.APPLICATION_JSON.getMimeType() );
+        HttpPost httpPost = new HttpPost(urlParam);
+        httpPost.setEntity(requestEntity);
+        for (int i = 0; i < 1; i++)
+        {
+            System.out.println(requestEntity.getContentEncoding().getValue());
+            CloseableHttpResponse response = httpclient.execute(targetHost, httpPost, context);
+            try
+            {
+                int statusCode;
+                statusCode = response.getStatusLine().getStatusCode();
+                if (StatusCodesEnum.getStatusCodesEnumFromStatusInteger(statusCode) == StatusCodesEnum.OK_200)
+                {
+//                        HttpEntity responsEntity = response.getEntity();
+                        responseString = response.getEntity().getContent().toString();
+                        System.out.println(responseString);
+                }else
+                {
+                    responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+                    System.out.println("ResponseString:");
+                    System.out.println(responseString);
+                    throw new MeinEinkaufRequestException(response);
+                }
+
+            } finally
+            {
+                response.close();
+            }
+        }
+        return responseString;
+    }
 
     /**
      * @return the apiHost
@@ -157,8 +228,36 @@ public class MeinEinkaufApiConnector
         return apiHost;
     }
 
+    /**
+     * 
+     * Description: 
+     * 
+     * @param is
+     * @return
+     * Creation: 17.06.2019 by mst
+     */
+    private static String convertStreamToString(InputStream is) {
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
 
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+    
     /**
      * @return the username
      */
@@ -167,4 +266,24 @@ public class MeinEinkaufApiConnector
         return username;
     }
 
+    /**
+     * 
+     * Description: Verify validity of JSON String
+     * 
+     * @param jsonInString
+     * @return
+     *         Creation: 13.06.2019 by mst
+     */
+    public static boolean isJSONValid(String jsonInString)
+    {
+        try
+        {
+            final ObjectMapper mapper = new ObjectMapper();
+            mapper.readTree(jsonInString);
+            return true;
+        } catch (IOException e)
+        {
+            return false;
+        }
+    }
 }

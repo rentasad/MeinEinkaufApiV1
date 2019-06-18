@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+
+import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
 /**
  * Gustini GmbH (2019)
@@ -18,7 +20,7 @@ package org.gustini.library.meinEinkaufApi.objects;
 public class ShippingCost
 {
     private final double grossPrice;
-    private final VatRateEnum vatRate;
+    private final VatRate vatRate;
 
     /**
      * @param grossPrice
@@ -30,7 +32,7 @@ public class ShippingCost
      */
     public ShippingCost(
                         double grossPrice,
-                        VatRateEnum vatRate)
+                        VatRate vatRate)
     {
         super();
         this.grossPrice = grossPrice;
@@ -54,7 +56,7 @@ public class ShippingCost
      * 
      * @return the vatRate
      */
-    public VatRateEnum getVatRate()
+    public VatRate getVatRate()
     {
         return vatRate;
     }

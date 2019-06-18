@@ -1,4 +1,4 @@
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
 /**
  * 
  * Gustini GmbH (2019)

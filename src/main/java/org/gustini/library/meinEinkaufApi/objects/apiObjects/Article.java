@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+
+import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
 /**
  * Gustini GmbH (2019)
@@ -23,7 +25,7 @@ public class Article
     private final Integer quantity;
     private double grossWeight;
     private final double grossPrice;
-    private final VatRateEnum vatRate;
+    private final VatRate vatRate;
     private Attributes attributes;
     /**
      * @param articleNumber
@@ -37,7 +39,7 @@ public class Article
                    String name,
                    Integer quantity,
                    double grossPrice,
-                   VatRateEnum vatRate)
+                   VatRate vatRate)
     {
         super();
         this.articleNumber = articleNumber;
@@ -105,7 +107,7 @@ public class Article
     /**
      * @return the vatRate
      */
-    public VatRateEnum getVatRate()
+    public VatRate getVatRate()
     {
         return vatRate;
     }

@@ -1,7 +1,11 @@
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.gustini.library.meinEinkaufApi.objects.enums.Currency;
+import org.gustini.library.meinEinkaufApi.objects.enums.PaymentType;
+import org.gustini.library.meinEinkaufApi.objects.enums.Salutation;
+import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +35,13 @@ public class OrderTest
     {
         String orderNumber = "123456789";
         String orderDate = "2019-06-11";
-        CurrencyEnum currencyEnum = CurrencyEnum.CHF;
-        PaymentTypeEnum paymentType = PaymentTypeEnum.INVOICE;
-        Double grossSum = 78.99;
+        Currency currency = Currency.chf;
+        PaymentType paymentType = PaymentType.other;
+        Double grossSum = 623.52;
         String customerNumber = "44122265843";
         Customer customer = new Customer(customerNumber);
         customer.setContactEmail("max.mustermann@gustini.de");
-        SalutationEnum salutation = SalutationEnum.Herr;
+        Salutation salutation = Salutation.Herr;
         String firstName = "Max";
         String lastName = "Mustermann";
         String street = "Mustergasse";
@@ -53,17 +57,31 @@ public class OrderTest
         String name = "Testartikel 1";
         Integer quantity = 12; 
         Double grossPrice = 12.99;
-        VatRateEnum vatRateEnum = VatRateEnum.REDUCED;
+        VatRate vatRate = VatRate.reduced;
         
         
-        Article article1 = new Article(articleNumber, name, quantity, grossPrice, vatRateEnum);
-        Article article2 = new Article(articleNumber, name, quantity, grossPrice, vatRateEnum);
+        Article article1 = new Article(articleNumber, name, quantity, grossPrice, vatRate);
+        article1.setGrossWeight(1000);
+        Article article2 = new Article(articleNumber, name, quantity, grossPrice, vatRate);
+        article2.setGrossWeight(500);
         Article[] articles = {article1, article2};
+        
+        Tracking tracking1 = new Tracking();
+        tracking1.setCarrier("DHL");
+        tracking1.setTrackingNumber("445892355134");
+        Tracking tracking2 = new Tracking();
+        tracking2.setCarrier("DHL");
+        tracking2.setTrackingNumber("445892355148");
         Consignment consignment1 = new Consignment(articles);
+        consignment1.setTracking(tracking1);
+        
+        consignment1.setGrossWeight(1500);
+        
         Consignment consignment2 = new Consignment(articles);
-        
-        
+        consignment2.setGrossWeight(1500);
+        consignment2.setTracking(tracking2);
         Consignment[] consignments = {consignment1,consignment2};
+        
         Adress  invoiceAddress = new Adress(salutation, firstName, lastName, street, houseNumber, zip, city);
         
         invoiceAddress.setCompany("Mustermann Company");
@@ -71,7 +89,7 @@ public class OrderTest
         
         
         
-        Order order = new Order(orderNumber, orderDate, currencyEnum, paymentType, grossSum, customer, invoiceAddress);
+        Order order = new Order(orderNumber, orderDate, currency, paymentType, grossSum, customer, invoiceAddress);
         order.setConsignments(consignments);
         
         return order;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.enums;
 
 /**
  * Gustini GmbH (2019)
@@ -17,9 +17,9 @@ package org.gustini.library.meinEinkaufApi.objects;
 [ "standard", "reduced", "none" ]
  *
  */
-public enum VatRateEnum
+public enum VatRate
 {
-    STANDARD,
-    REDUCED,
-    NONE
+    standard,
+    reduced,
+    none
 }

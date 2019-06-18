@@ -6,10 +6,12 @@ package org.gustini.library.meinEinkaufApi.utility;
 import java.io.File;
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * Gustini GmbH (2019)
@@ -41,6 +43,7 @@ public class JsonBuilder
         // mapper.writeValue(new File("c:\\temp\\staff.json"), new Staff());
 
         // Java object to JSON string
+        mapper.setSerializationInclusion(Include.NON_NULL);
         String jsonString = mapper.writeValueAsString(object);
         return jsonString;
     }

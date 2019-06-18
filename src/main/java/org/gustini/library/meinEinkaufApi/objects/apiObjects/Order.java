@@ -1,4 +1,7 @@
-package org.gustini.library.meinEinkaufApi.objects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+
+import org.gustini.library.meinEinkaufApi.objects.enums.Currency;
+import org.gustini.library.meinEinkaufApi.objects.enums.PaymentType;
 
 /**
  * 
@@ -24,8 +27,8 @@ public class Order
 
     private final String orderNumber;
     private final String orderDate;
-    private final CurrencyEnum currencyEnum;
-    private final PaymentTypeEnum paymentType;
+    private final Currency currency;
+    private final PaymentType paymentType;
     /*
      * Die Brutto Bestellsumme (inklusive Lieferkosten)
      */
@@ -43,7 +46,7 @@ public class Order
     /**
      * @param orderNumber
      * @param orderDate
-     * @param currencyEnum
+     * @param currency
      * @param paymentType
      * @param grossSum
      * @param customer
@@ -54,8 +57,8 @@ public class Order
     public Order(
                  String orderNumber,
                  String orderDate,
-                 CurrencyEnum currencyEnum,
-                 PaymentTypeEnum paymentType,
+                 Currency currency,
+                 PaymentType paymentType,
                  Double grossSum,
                  Customer customer,
                  Adress invoiceAddress)
@@ -63,7 +66,7 @@ public class Order
         super();
         this.orderNumber = orderNumber;
         this.orderDate = orderDate;
-        this.currencyEnum = currencyEnum;
+        this.currency = currency;
         this.paymentType = paymentType;
         this.grossSum = grossSum;
         this.customer = customer;
@@ -223,11 +226,11 @@ public class Order
      * 
      * ["eur", "chf"]
      * 
-     * @return the currencyEnum
+     * @return the currency
      */
-    public CurrencyEnum getCurrencyEnum()
+    public Currency getCurrency()
     {
-        return currencyEnum;
+        return currency;
     }
 
     /**
@@ -238,7 +241,7 @@ public class Order
      * 
      * @return the paymentType
      */
-    public PaymentTypeEnum getPaymentType()
+    public PaymentType getPaymentType()
     {
         return paymentType;
     }

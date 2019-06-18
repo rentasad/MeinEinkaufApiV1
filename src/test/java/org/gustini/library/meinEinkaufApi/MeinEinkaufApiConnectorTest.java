@@ -1,6 +1,8 @@
 package org.gustini.library.meinEinkaufApi;
 
-import org.gustini.library.meinEinkaufApi.objects.OrderTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.OrderTest;
 import org.gustini.library.meinEinkaufApi.utility.JsonBuilder;
 import org.junit.After;
 import org.junit.Before;
@@ -20,16 +22,35 @@ public class MeinEinkaufApiConnectorTest
     }
 
     @Test
-    public void testSendRequest() throws Exception
+    public void testHelloWorldSendRequest() throws Exception
     {
         String apiTestUrl ="api.meineinkauf.ch";
-        String param =  "/v1/echo/HelloWorld";
+        String param =  "/v1/echo/HelloWorld/";
         String apiKey = "MEINEINKAUF_TEST_API_KEY";
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
         String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
-        String response = apiConnector.sendRequest(jsonString, param);
-        System.out.println(response);
+        
+        String response = apiConnector.sendGetRequest(param).trim();
+        String assertString = "{\"echo\":\"HelloWorld\",\"errors\":[],\"success\":true}";
+//        System.out.println(response);
+//        System.out.println(assertString);
+        assertEquals(assertString, response);
+//        System.out.println(response);
+    }
+
+    @Test
+    public void testSendPostRequest() throws Exception
+    {
+        String apiTestUrl ="api.meineinkauf.ch";
+        String param =  "/v1/order";
+        String apiKey = "MEINEINKAUF_TEST_API_KEY";
+        MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
+        
+        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
+//        System.out.println(jsonString);
+        String responseString =apiConnector.sendPostRequest(jsonString, param);
+        System.out.println(responseString);
     }
 
 }
