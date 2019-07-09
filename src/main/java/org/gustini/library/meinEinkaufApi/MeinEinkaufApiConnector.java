@@ -124,7 +124,7 @@ public class MeinEinkaufApiConnector
     {
         String responseString = null;
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-
+        
         HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
@@ -172,8 +172,9 @@ public class MeinEinkaufApiConnector
     {
         String responseString = null;
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-
+        
         HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
+        
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
 
@@ -219,6 +220,7 @@ public class MeinEinkaufApiConnector
                     responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
                     System.out.println("ResponseString:");
                     System.out.println(responseString);
+                    
                     throw new MeinEinkaufRequestException(response);
                 }
 
@@ -290,6 +292,7 @@ public class MeinEinkaufApiConnector
         {
             final ObjectMapper mapper = new ObjectMapper();
             mapper.readTree(jsonInString);
+            
             return true;
         } catch (IOException e)
         {

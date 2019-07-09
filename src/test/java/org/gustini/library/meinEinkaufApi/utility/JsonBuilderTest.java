@@ -1,7 +1,7 @@
 package org.gustini.library.meinEinkaufApi.utility;
 
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.Order;
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.OrderTest;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.Order;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.OrderTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;

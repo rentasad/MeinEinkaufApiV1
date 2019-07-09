@@ -1,4 +1,4 @@
-package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 import org.gustini.library.meinEinkaufApi.objects.enums.Currency;
 import org.gustini.library.meinEinkaufApi.objects.enums.PaymentType;

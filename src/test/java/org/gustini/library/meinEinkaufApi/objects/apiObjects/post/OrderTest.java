@@ -1,4 +1,4 @@
-package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 import static org.junit.Assert.assertNotNull;
 

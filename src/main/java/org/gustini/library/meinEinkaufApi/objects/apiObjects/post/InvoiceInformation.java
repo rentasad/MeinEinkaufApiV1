@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.gustini.library.meinEinkaufApi.objects.apiObjects;
+package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 /**
  * Gustini GmbH (2019)
