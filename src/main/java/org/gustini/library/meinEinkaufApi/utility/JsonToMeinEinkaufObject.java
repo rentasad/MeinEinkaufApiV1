@@ -6,8 +6,15 @@ package org.gustini.library.meinEinkaufApi.utility;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Order;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.ProcessingStateHistory;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Tracking;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Consignment;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseErrorObject;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseObject;
+import org.gustini.library.meinEinkaufApi.objects.enums.Carrier;
+import org.gustini.library.meinEinkaufApi.objects.enums.ProcessingState;
+import org.hamcrest.core.IsInstanceOf;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -54,7 +61,7 @@ public class JsonToMeinEinkaufObject
                         ResponseErrorObject errorObject = new ResponseErrorObject(code, message);
                         errorsArrayList.add(errorObject);
                     }
-                    
+
                 }
                 responseObject = new ResponseObject(success, errorsArrayList.toArray(new ResponseErrorObject[0]));
                 // Prüfe ob es Orders gibt
@@ -62,25 +69,38 @@ public class JsonToMeinEinkaufObject
                 {
                     boolean hasValues = true;
                     int limit = jo.getInt("limit");
-                    int count = jo.getInt("count");;
+                    int count = jo.getInt("count");
+                    ;
                     int offset = jo.getInt("offset");
                     responseObject.setOffset(offset);
                     responseObject.setLimit(limit);
                     responseObject.setCount(count);
                     responseObject.setOrdersJSONArray(jo.getJSONArray("orders"));
                     responseObject.setHasValues(hasValues);
+                } else
+                {
+                    responseObject.setHasValues(false);
                 }
-                
-                
-                
-                
 
+            } else
+            {
+                // Kein gültiges Response-Objekt - erstelle manuell eines
+                boolean success = false;
+                ResponseErrorObject error = new ResponseErrorObject("-1", "Response enthält keine gültiges JSON-Objekt: \r\n" + resultJsonString);
+                ResponseErrorObject[] errors =
+                { error };
+                responseObject = new ResponseObject(success, errors);
             }
 
             return responseObject;
         } else
         {
-            return null;
+            boolean success = false;
+            ResponseErrorObject error = new ResponseErrorObject("-2", "Response enthält keine gültiges JSON: \r\n" + resultJsonString);
+            ResponseErrorObject[] errors =
+            { error };
+            responseObject = new ResponseObject(success, errors);
+            return responseObject;
         }
 
     }
@@ -97,28 +117,95 @@ public class JsonToMeinEinkaufObject
     {
         String[] neededKeys =
         { "success", "errors" };
-        Set<String> avaibleKeySet = jo.keySet();
+        // Set<String> avaibleKeySet = jo.keySet();
         boolean valid = true;
         for (String key : neededKeys)
         {
             valid = valid && jo.has(key);
         }
-
         return valid;
     }
 
     /**
      * 
-     * Description: 
+     * Description:Create OrderArray (GET) from JSONArray
      * 
      * @param orderJsonArray
-     * Creation: 09.07.2019 by mst
+     *            Creation: 09.07.2019 by mst
      */
-    public static void getOrderResponsesFromJsonarray(JSONArray orderJsonArray)
+    public static Order[] getOrderResponsesFromJsonarray(JSONArray orderJsonArray)
     {
-        
-        
-        
+        ArrayList<Order> joArrayList = new ArrayList<>();
+        for (Object object : orderJsonArray)
+        {
+            if (object instanceof JSONObject)
+            {
+                JSONObject jo = (JSONObject) object;
+                int id = jo.getInt("id");
+                String created = jo.getString("created");
+                String orderNumber = jo.getString("orderNumber");
+                String orderDate = jo.getString("orderDate");
+                ProcessingState processingState = ProcessingState.valueOf(jo.getString("processingState"));
+
+                JSONArray processingStateJsonArray = jo.getJSONArray("processingStateHistory");
+                ArrayList<ProcessingStateHistory> processingStateHistories = new ArrayList<>();
+                for (Object processingStateObject : processingStateJsonArray)
+                {
+                    if (processingStateObject instanceof JSONObject)
+                    {
+                        JSONObject processingStateJsonObject = (JSONObject) processingStateObject;
+                        String state, changed;
+                        state = processingStateJsonObject.getString("state");
+                        changed = processingStateJsonObject.getString("changed");
+                        ProcessingStateHistory stateHistory = new ProcessingStateHistory(state, changed);
+                        processingStateHistories.add(stateHistory);
+                    }
+                }
+                ProcessingStateHistory[] processingStateHistory = processingStateHistories.toArray(new ProcessingStateHistory[0]);
+                String processingStateChanged = jo.getString("processingStateChanged");
+                /*
+                 * Eine Auflistung der einzelnen Sendungen der Bestellung mit zusätzlichen Informationen zu dieser Sendung,
+                 * erst vorhanden, wenn processingState "exported" oder "exported_partially"
+                 */
+                JSONArray consignmentsJsonArray = jo.getJSONArray("consignments");
+                ArrayList<Consignment> consignmentsArrayList = new ArrayList<>();
+                for (Object consignmentObject : consignmentsJsonArray)
+                {
+                    if (consignmentObject instanceof JSONObject)
+                    {
+//                        if (id == 11946)
+//                            System.out.println("STOP");
+
+                        JSONObject consignmentJSONObject = (JSONObject) consignmentObject;
+                        if (consignmentJSONObject.isNull("gas") == false)
+                        {
+                            JSONObject gasJSONObject = consignmentJSONObject.getJSONObject("gas");
+                            String gasCarrier, gasTrackingNumber;
+                            gasCarrier = gasJSONObject.getString("carrier");
+                            gasTrackingNumber = gasJSONObject.getString("trackingNumber");
+
+                            Tracking gas = new Tracking(Carrier.valueOf(gasCarrier), gasTrackingNumber);
+
+                            JSONObject trackingJsonObject = consignmentJSONObject.getJSONObject("tracking");
+                            String carrierTracking, trackingNumber;
+                            carrierTracking = trackingJsonObject.getString("carrier");
+                            trackingNumber = trackingJsonObject.getString("trackingNumber");
+
+                            Tracking tracking = new Tracking(Carrier.valueOf(carrierTracking), trackingNumber);
+                            Consignment co = new Consignment(tracking, gas);
+                            consignmentsArrayList.add(co);
+                        }
+                    }
+                }
+
+                Consignment[] consignments = consignmentsArrayList.toArray(new Consignment[0]);
+                Order order = new Order(id, created, orderNumber, orderDate, processingState, processingStateHistory, processingStateChanged, consignments);
+                joArrayList.add(order);
+            }
+        }
+
+        return joArrayList.toArray(new Order[0]);
+
     }
 
 }

@@ -3,7 +3,9 @@ package org.gustini.library.meinEinkaufApi.utility;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Order;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseObject;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -49,8 +51,8 @@ public class JsonToMeinEinkaufObjectTest
     {
         ResponseObject roFull = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(fullOrderResponseString);
         ResponseObject roError = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(failedRequestJsonResponse);
-        assertTrue(roFull.isHasValues());
-        assertFalse(roError.isHasValues());
+        assertTrue(roFull.hasValues());
+        assertFalse(roError.hasValues());
     }
 
     @Test
@@ -61,6 +63,15 @@ public class JsonToMeinEinkaufObjectTest
         assertTrue(JsonToMeinEinkaufObject.isValidResponseValueFromMeinEinkauf(joFullResponse));
         assertTrue(JsonToMeinEinkaufObject.isValidResponseValueFromMeinEinkauf(joErrorResponse));
         
+    }
+
+    @Test
+    public void testGetOrderResponsesFromJsonarray() throws Exception
+    {
+        JSONObject joFullResponse = new JSONObject(fullOrderResponseString);
+        JSONArray ordersJSONArray = joFullResponse.getJSONArray("orders");
+        Order[] orders = JsonToMeinEinkaufObject.getOrderResponsesFromJsonarray(ordersJSONArray);
+        assertTrue(orders.length == 36);
     }
 
 }

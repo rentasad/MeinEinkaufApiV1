@@ -2,6 +2,7 @@ package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.Tracking;
 import org.gustini.library.meinEinkaufApi.objects.enums.Currency;
 import org.gustini.library.meinEinkaufApi.objects.enums.PaymentType;
 import org.gustini.library.meinEinkaufApi.objects.enums.Salutation;
@@ -67,12 +68,8 @@ public class OrderTest
         article2.setGrossWeight(500);
         Article[] articles = {article1, article2};
         
-        Tracking tracking1 = new Tracking();
-        tracking1.setCarrier("DHL");
-        tracking1.setTrackingNumber("445892355134");
-        Tracking tracking2 = new Tracking();
-        tracking2.setCarrier("DHL");
-        tracking2.setTrackingNumber("445892355148");
+        Tracking tracking1 = new Tracking("DHL","445892355134");
+        Tracking tracking2 = new Tracking("DHL","445892355148");
         Consignment consignment1 = new Consignment(articles);
         consignment1.setTracking(tracking1);
         

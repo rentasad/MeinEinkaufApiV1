@@ -3,6 +3,8 @@
  */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.Tracking;
+
 /**
  * Gustini GmbH (2019)
  * Creation: 11.06.2019

@@ -20,18 +20,18 @@ public class Consignment
     /**
      * Die Trackinginformationen zu dieser Sendung
      */
-    private String tracking;
+    private Tracking tracking;
     /**
      *      Die GAS-Trackinginformationen zu dieser Sendung
      */
-    private String gas;
+    private Tracking gas;
     /**
      * @param tracking
      * @param gas
      */
     public Consignment(
-                       String tracking,
-                       String gas)
+                Tracking tracking,
+                Tracking gas)
     {
         super();
         this.tracking = tracking;
@@ -40,28 +40,28 @@ public class Consignment
     /**
      * @return the tracking
      */
-    public String getTracking()
+    public Tracking getTracking()
     {
         return tracking;
     }
     /**
      * @param tracking the tracking to set
      */
-    public void setTracking(String tracking)
+    public void setTracking(Tracking tracking)
     {
         this.tracking = tracking;
     }
     /**
      * @return the gas
      */
-    public String getGas()
+    public Tracking getGas()
     {
         return gas;
     }
     /**
      * @param gas the gas to set
      */
-    public void setGas(String gas)
+    public void setGas(Tracking gas)
     {
         this.gas = gas;
     }

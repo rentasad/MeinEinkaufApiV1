@@ -4,11 +4,8 @@
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 /**
- * Gustini GmbH (2019)
- * Creation: 11.06.2019
- * gustini.library.meinEinkaufApi
- * org.gustini.library.meinEinkaufApi.objects
- * 
+ * Tracking-Informationen (Tracking-Object)
+ * ONLY FOR POST-REQUEST
  * @author Matthias Staud
  *
  *
@@ -17,35 +14,39 @@ package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
  */
 public class Tracking
 {
-    private String carrier;
-    private String trackingNumber;
+    private final String carrier;
+    private final String trackingNumber;
+
     /**
+     * @param carrier  Der deutsche Lieferdienst der Sendung von Ihnen zu uns.
+     * @param trackingNumber Die deutsche Trackingnummer der Sendung von Ihnen zu uns. Dies dient für uns zur Identifizierung der eingehenden Sendung zur Bestellung
+     */
+    public Tracking(
+                    String carrier,
+                    String trackingNumber)
+    {
+        super();
+        this.carrier = carrier;
+        this.trackingNumber = trackingNumber;
+    }
+
+    /**
+     * 
+     * Der deutsche Lieferdienst der Sendung von Ihnen zu uns.
      * @return the carrier
      */
     public String getCarrier()
     {
         return carrier;
     }
+
     /**
-     * @param carrier the carrier to set
-     */
-    public void setCarrier(String carrier)
-    {
-        this.carrier = carrier;
-    }
-    /**
+     * Die deutsche Trackingnummer der Sendung von Ihnen zu uns. Dies dient für uns zur Identifizierung der eingehenden Sendung zur Bestellung
      * @return the trackingNumber
      */
     public String getTrackingNumber()
     {
         return trackingNumber;
-    }
-    /**
-     * @param trackingNumber the trackingNumber to set
-     */
-    public void setTrackingNumber(String trackingNumber)
-    {
-        this.trackingNumber = trackingNumber;
-    }
-    
+    } 
+
 }

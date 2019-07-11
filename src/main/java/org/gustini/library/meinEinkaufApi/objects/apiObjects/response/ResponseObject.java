@@ -76,9 +76,10 @@ public class ResponseObject
 
 
     /**
+     * Return true if ResponseObject contains Order Informations
      * @return the hasValues
      */
-    public boolean isHasValues()
+    public boolean hasValues()
     {
         return hasValues;
     }

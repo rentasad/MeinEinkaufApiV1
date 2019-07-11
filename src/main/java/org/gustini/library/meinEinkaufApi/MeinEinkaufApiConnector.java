@@ -120,7 +120,7 @@ public class MeinEinkaufApiConnector
      * @throws IOException
      *             Creation: 11.06.2019 by mst
      */
-    public String sendGetRequest(final String urlParam) throws IOException
+    public String sendGetRequest(final String urlParam ) throws IOException
     {
         String responseString = null;
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
@@ -143,11 +143,12 @@ public class MeinEinkaufApiConnector
         HttpGet httpget = new HttpGet(urlParam);
         for (int i = 0; i < 1; i++)
         {
+            // SEND REQUEST
             CloseableHttpResponse response = httpclient.execute(targetHost, httpget, context);
             try
             {
                 HttpEntity entity = response.getEntity();
-                responseString = convertStreamToString(response.getEntity().getContent());
+                responseString = convertStreamToString(entity.getContent());
                 System.out.println(responseString);
             } finally
             {
@@ -217,11 +218,15 @@ public class MeinEinkaufApiConnector
                         System.out.println(responseString);
                 }else
                 {
+                    /*
+                     * Im Fehlerfall wurde früher eine Exception ausgegeben - Das wird jetzt unterbunden.
+                     * Es erfolgt nur eine gesonderte Ausgabe
+                     */
                     responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-                    System.out.println("ResponseString:");
-                    System.out.println(responseString);
+                    System.err.println("ResponseString with Error:");
+                    System.err.println(responseString);
                     
-                    throw new MeinEinkaufRequestException(response);
+//                    throw new MeinEinkaufRequestException(response);
                 }
 
             } finally
