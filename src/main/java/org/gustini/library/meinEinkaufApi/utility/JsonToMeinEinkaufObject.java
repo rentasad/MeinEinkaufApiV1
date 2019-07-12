@@ -4,17 +4,15 @@
 package org.gustini.library.meinEinkaufApi.utility;
 
 import java.util.ArrayList;
-import java.util.Set;
 
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Consignment;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Order;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.ProcessingStateHistory;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Tracking;
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Consignment;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseErrorObject;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseObject;
 import org.gustini.library.meinEinkaufApi.objects.enums.Carrier;
 import org.gustini.library.meinEinkaufApi.objects.enums.ProcessingState;
-import org.hamcrest.core.IsInstanceOf;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
