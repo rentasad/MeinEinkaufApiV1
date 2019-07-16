@@ -47,13 +47,13 @@ public class JsonToMeinEinkaufObjectTest
         assertTrue(JsonBuilder.isJSONValid(fullOrderResponseString));
     }
     @Test
-    public void testGetResponseObjectFromJsonString() throws Exception
-    {
-        ResponseObject roFull = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(fullOrderResponseString);
-        ResponseObject roError = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(failedRequestJsonResponse);
-        assertTrue(roFull.hasValues());
-        assertFalse(roError.hasValues());
-    }
+        public void testGetResponseObjectFromMultipleOrdersJsonString() throws Exception
+        {
+            ResponseObject roFull = JsonToMeinEinkaufObject.getResponseObjectFromOrdersJsonString(fullOrderResponseString);
+            ResponseObject roError = JsonToMeinEinkaufObject.getResponseObjectFromOrdersJsonString(failedRequestJsonResponse);
+            assertTrue(roFull.hasValues());
+            assertFalse(roError.hasValues());
+        }
 
     @Test
     public void testIsValidResponseValueFromMeinEinkauf() throws Exception

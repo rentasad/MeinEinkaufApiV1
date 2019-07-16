@@ -160,4 +160,23 @@ public class MeinEinkaufApiConnectorTest
         System.out.println(responseString);
     }
 
+    @Test
+    public void testSendGetRequest() throws Exception
+    {
+        String orderNr = "940110216";
+        String apiTestUrl ="api-test.meineinkauf.ch";
+        String param =  "/v1/order/" + orderNr;
+//        String apiKey = "MEINEINKAUF_TEST_API_KEY";
+        String apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
+        MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
+        
+        
+        String response = apiConnector.sendGetRequest(param).trim();
+        System.out.println(response);
+        
+        JSONObject obj = new JSONObject(response);
+        assertTrue(obj.getBoolean("success"));
+    }
+    
+
 }
