@@ -4,7 +4,7 @@
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 /**
- * Tracking-Informationen (Tracking-Object)
+ * TrackingResponse-Informationen (TrackingResponse-Object)
  * ONLY FOR POST-REQUEST
  * @author Matthias Staud
  *

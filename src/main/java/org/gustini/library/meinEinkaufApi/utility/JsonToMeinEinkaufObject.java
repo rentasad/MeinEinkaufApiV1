@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Consignment;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Order;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.ProcessingStateHistory;
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Tracking;
+import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.TrackingResponse;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseErrorObject;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.response.ResponseObject;
 import org.gustini.library.meinEinkaufApi.objects.enums.Carrier;
@@ -173,24 +173,32 @@ public class JsonToMeinEinkaufObject
                     {
 //                        if (id == 11946)
 //                            System.out.println("STOP");
-
+                        ArrayList<TrackingResponse> gasLabelsArrayList = new ArrayList<>();
                         JSONObject consignmentJSONObject = (JSONObject) consignmentObject;
-                        if (consignmentJSONObject.isNull("gas") == false)
+                        if (consignmentJSONObject.isNull("gasLabels") == false)
                         {
+                            JSONArray gasLabelsJsonArray = jo.getJSONArray("gasLabels");
+                            for (Object gasLabelJSONObject : gasLabelsJsonArray)
+                            {
+                                if (gasLabelJSONObject instanceof JSONObject)
+                                {
+                                    String gasCarrier, gasTrackingNumber;
+                                    gasCarrier = ((JSONObject)gasLabelJSONObject).getString("carrier");
+                                    gasTrackingNumber = ((JSONObject)gasLabelJSONObject).getString("trackingNumber");
+                                    TrackingResponse gasLabel = new TrackingResponse(Carrier.valueOf(gasCarrier), gasTrackingNumber);
+                                    gasLabelsArrayList.add(gasLabel);
+                                }
+                            }
+                            
                             JSONObject gasJSONObject = consignmentJSONObject.getJSONObject("gas");
-                            String gasCarrier, gasTrackingNumber;
-                            gasCarrier = gasJSONObject.getString("carrier");
-                            gasTrackingNumber = gasJSONObject.getString("trackingNumber");
-
-                            Tracking gas = new Tracking(Carrier.valueOf(gasCarrier), gasTrackingNumber);
 
                             JSONObject trackingJsonObject = consignmentJSONObject.getJSONObject("tracking");
                             String carrierTracking, trackingNumber;
                             carrierTracking = trackingJsonObject.getString("carrier");
                             trackingNumber = trackingJsonObject.getString("trackingNumber");
 
-                            Tracking tracking = new Tracking(Carrier.valueOf(carrierTracking), trackingNumber);
-                            Consignment co = new Consignment(tracking, gas);
+                            TrackingResponse trackingResponse = new TrackingResponse(Carrier.valueOf(carrierTracking), trackingNumber);
+                            Consignment co = new Consignment(trackingResponse, gasLabelsArrayList.toArray(new TrackingResponse[0]));
                             consignmentsArrayList.add(co);
                         }
                     }

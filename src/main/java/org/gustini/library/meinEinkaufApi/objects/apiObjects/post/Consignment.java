@@ -22,6 +22,7 @@ public class Consignment
     private double grossWeight;
     private Tracking tracking; 
     private final Article[] articles;
+    private String externalId;
     /**
      * @param articles
      */
