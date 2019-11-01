@@ -67,6 +67,20 @@ public class Consignment
     {
         return articles;
     }
+    /**
+     * @return the externalId
+     */
+    public String getExternalId()
+    {
+        return externalId;
+    }
+    /**
+     * @param externalId the externalId to set
+     */
+    public void setExternalId(String externalId)
+    {
+        this.externalId = externalId;
+    }
 
 
 }
