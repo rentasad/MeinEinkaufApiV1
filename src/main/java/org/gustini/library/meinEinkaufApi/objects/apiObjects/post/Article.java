@@ -26,6 +26,7 @@ public class Article
     private double grossWeight;
     private final double grossPrice;
     private final VatRate vatRate;
+    private String externalId;
     private Attributes attributes;
     /**
      * @param articleNumber
@@ -110,6 +111,22 @@ public class Article
     public VatRate getVatRate()
     {
         return vatRate;
+    }
+    /**
+     * @return the externalId
+     * Eindeutiger Identifier im Kundensystem
+     */
+    public String getExternalId()
+    {
+        return externalId;
+    }
+    /**
+     * @param externalId the externalId to set
+     * Eindeutiger Identifier im Kundensystem
+     */
+    public void setExternalId(String externalId)
+    {
+        this.externalId = externalId;
     }
 
 
