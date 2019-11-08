@@ -39,7 +39,7 @@ public class Order
     private final Adress invoiceAddress;
     private Adress shippingAddress;
     private Consignment[] consignments;
-    private Discount[] discounts;
+    private DiscountRequest[] discounts;
     private Donation[] donations;
     private InvoiceInformation invoiceInformation;
 
@@ -142,7 +142,7 @@ public class Order
      * 
      * @return the discounts
      */
-    public Discount[] getDiscounts()
+    public DiscountRequest[] getDiscounts()
     {
         return discounts;
     }
@@ -153,7 +153,7 @@ public class Order
      * @param discounts
      *            the discounts to set
      */
-    public void setDiscounts(Discount[] discounts)
+    public void setDiscounts(DiscountRequest[] discounts)
     {
 
         this.discounts = discounts;

@@ -17,10 +17,10 @@ import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
  * Description:
  *
  */
-public class Discount
+public class DiscountRequest
 {
     private final String name;
-    private final double grossPrice;// (Negativer Wert!)
+    private double grossPrice;// (Negativer Wert!)
     private final VatRate vatRate;
 
     /**
@@ -49,7 +49,7 @@ public class Discount
      * @param grossPrice
      * @param vatRate
      */
-    public Discount(
+    public DiscountRequest(
                     String name,
                     double grossPrice,
                     VatRate vatRate)
@@ -58,6 +58,20 @@ public class Discount
         this.name = name;
         this.grossPrice = grossPrice;
         this.vatRate = vatRate;
+    }
+    /**
+     * @return the vatRate
+     */
+    public VatRate getVatRate()
+    {
+        return vatRate;
+    }
+    /**
+     * @param grossPrice the grossPrice to set
+     */
+    public void setGrossPrice(double grossPrice)
+    {
+        this.grossPrice = grossPrice;
     }
 
     

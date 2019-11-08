@@ -21,5 +21,7 @@ public enum VatRate
 {
     standard,
     reduced,
-    none
+    none;
+    
+    
 }
