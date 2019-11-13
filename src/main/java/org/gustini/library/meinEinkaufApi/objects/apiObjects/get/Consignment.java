@@ -20,49 +20,69 @@ public class Consignment
     /**
      * Die Trackinginformationen zu dieser Sendung
      */
-    private Tracking tracking;
+    private TrackingResponse tracking;
     /**
      *      Die GAS-Trackinginformationen zu dieser Sendung
      */
-    private Tracking gas;
+    private TrackingResponse[] gasLabels;
+    /**
+     * 
+     */
+    private String externalId; 
+    
+    
     /**
      * @param tracking
-     * @param gas
+     * @param gasLabels
      */
     public Consignment(
-                Tracking tracking,
-                Tracking gas)
+                TrackingResponse trackingResponse,
+                TrackingResponse[] gasLabels)
     {
         super();
-        this.tracking = tracking;
-        this.gas = gas;
+        this.tracking = trackingResponse;
+        this.gasLabels = gasLabels;
     }
     /**
      * @return the tracking
      */
-    public Tracking getTracking()
+    public TrackingResponse getTracking()
     {
         return tracking;
     }
     /**
      * @param tracking the tracking to set
      */
-    public void setTracking(Tracking tracking)
+    public void setTracking(TrackingResponse trackingResponse)
     {
-        this.tracking = tracking;
+        this.tracking = trackingResponse;
     }
     /**
-     * @return the gas
+     * @return the gasLabels
      */
-    public Tracking getGas()
+    public TrackingResponse[] getGasLabels()
     {
-        return gas;
+        return gasLabels;
     }
     /**
-     * @param gas the gas to set
+     * @param gasLabels the gasLabels to set
      */
-    public void setGas(Tracking gas)
+    public void setGas(TrackingResponse[] gasLabels)
     {
-        this.gas = gas;
+        this.gasLabels = gasLabels;
+    }
+    /**
+     * @return the externalId
+     */
+    public String getExternalId()
+    {
+        return externalId;
+    }
+    /**
+     * @param externalId the externalId to set
+     */
+    public void setExternalId(String externalId)
+    {
+        this.externalId = externalId;
     }
 }

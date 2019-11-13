@@ -22,6 +22,7 @@ public class Consignment
     private double grossWeight;
     private Tracking tracking; 
     private final Article[] articles;
+    private String externalId;
     /**
      * @param articles
      */
@@ -65,6 +66,20 @@ public class Consignment
     public Article[] getArticles()
     {
         return articles;
+    }
+    /**
+     * @return the externalId
+     */
+    public String getExternalId()
+    {
+        return externalId;
+    }
+    /**
+     * @param externalId the externalId to set
+     */
+    public void setExternalId(String externalId)
+    {
+        this.externalId = externalId;
     }
 
 

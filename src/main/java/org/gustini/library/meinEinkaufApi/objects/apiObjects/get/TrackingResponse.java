@@ -6,7 +6,7 @@ package org.gustini.library.meinEinkaufApi.objects.apiObjects.get;
 import org.gustini.library.meinEinkaufApi.objects.enums.Carrier;
 
 /**
- * Tracking-Object
+ * TrackingResponse-Object
  * 
  * @author Matthias Staud
  *
@@ -14,7 +14,7 @@ import org.gustini.library.meinEinkaufApi.objects.enums.Carrier;
  *         Description:
  *
  */
-public class Tracking
+public class TrackingResponse
 {
     private Carrier carrier;
     private String trackingNumber;
@@ -70,7 +70,7 @@ public class Tracking
      *            ["swisspost", "dpd", "spedition"]
      * @param trackingNumber Die Trackingnummer
      */
-    public Tracking(
+    public TrackingResponse(
                     Carrier carrier,
                     String trackingNumber)
     {
