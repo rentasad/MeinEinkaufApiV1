@@ -68,14 +68,26 @@ public class JsonToMeinEinkaufObject
                     boolean hasValues = true;
                     int limit = jo.getInt("limit");
                     int count = jo.getInt("count");
-                    ;
+
                     int offset = jo.getInt("offset");
                     responseObject.setOffset(offset);
                     responseObject.setLimit(limit);
                     responseObject.setCount(count);
                     responseObject.setOrdersJSONArray(jo.getJSONArray("orders"));
                     responseObject.setHasValues(hasValues);
+                } else if (jo.has("order"))
+                {
+                    /*
+                     * Einzelne Order angefragt und entsprechent interpretiert
+                     */
+                    JSONArray jsonArray = new JSONArray();
+                    jsonArray.put(jo.get("order"));
+                    responseObject.setHasValues(true);
+                    responseObject.setCount(1);
+                    responseObject.setOrdersJSONArray(jsonArray);
+
                 } else
+
                 {
                     responseObject.setHasValues(false);
                 }
@@ -171,27 +183,30 @@ public class JsonToMeinEinkaufObject
                 {
                     if (consignmentObject instanceof JSONObject)
                     {
-//                        if (id == 11946)
-//                            System.out.println("STOP");
+                        String externalId = ((JSONObject) consignmentObject).getString("externalId");
+                        // if (id == 11946)
+                        // System.out.println("STOP");
                         ArrayList<TrackingResponse> gasLabelsArrayList = new ArrayList<>();
                         JSONObject consignmentJSONObject = (JSONObject) consignmentObject;
                         if (consignmentJSONObject.isNull("gasLabels") == false)
                         {
-                            JSONArray gasLabelsJsonArray = jo.getJSONArray("gasLabels");
+                            JSONArray gasLabelsJsonArray = consignmentJSONObject.getJSONArray("gasLabels");
                             for (Object gasLabelJSONObject : gasLabelsJsonArray)
                             {
                                 if (gasLabelJSONObject instanceof JSONObject)
                                 {
                                     String gasCarrier, gasTrackingNumber;
-                                    gasCarrier = ((JSONObject)gasLabelJSONObject).getString("carrier");
-                                    gasTrackingNumber = ((JSONObject)gasLabelJSONObject).getString("trackingNumber");
+                                    gasCarrier = ((JSONObject) gasLabelJSONObject).getString("carrier");
+                                    gasTrackingNumber = ((JSONObject) gasLabelJSONObject).getString("trackingNumber");
                                     TrackingResponse gasLabel = new TrackingResponse(Carrier.valueOf(gasCarrier), gasTrackingNumber);
                                     gasLabelsArrayList.add(gasLabel);
                                 }
                             }
-                            
-                            JSONObject gasJSONObject = consignmentJSONObject.getJSONObject("gas");
 
+                            if (consignmentJSONObject.isNull("gas") == false)
+                            {
+                                JSONObject gasJSONObject = consignmentJSONObject.getJSONObject("gas");
+                            }
                             JSONObject trackingJsonObject = consignmentJSONObject.getJSONObject("tracking");
                             String carrierTracking, trackingNumber;
                             carrierTracking = trackingJsonObject.getString("carrier");
@@ -199,6 +214,7 @@ public class JsonToMeinEinkaufObject
 
                             TrackingResponse trackingResponse = new TrackingResponse(Carrier.valueOf(carrierTracking), trackingNumber);
                             Consignment co = new Consignment(trackingResponse, gasLabelsArrayList.toArray(new TrackingResponse[0]));
+                            co.setExternalId(externalId);
                             consignmentsArrayList.add(co);
                         }
                     }

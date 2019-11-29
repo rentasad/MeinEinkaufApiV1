@@ -49,8 +49,8 @@ public class JsonToMeinEinkaufObjectTest
     @Test
         public void testGetResponseObjectFromMultipleOrdersJsonString() throws Exception
         {
-            ResponseObject roFull = JsonToMeinEinkaufObject.getResponseObjectFromOrdersJsonString(fullOrderResponseString);
-            ResponseObject roError = JsonToMeinEinkaufObject.getResponseObjectFromOrdersJsonString(failedRequestJsonResponse);
+            ResponseObject roFull = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(fullOrderResponseString);
+            ResponseObject roError = JsonToMeinEinkaufObject.getResponseObjectFromJsonString(failedRequestJsonResponse);
             assertTrue(roFull.hasValues());
             assertFalse(roError.hasValues());
         }
