@@ -19,7 +19,8 @@ public class ResponseErrorObject
 {
     String code;
     String message;
-
+    String property;
+    String jsonValue;
     /**
      * @return the code
      */
@@ -54,17 +55,54 @@ public class ResponseErrorObject
         this.message = message;
     }
 
+
+
+    /**
+     * @return the property
+     */
+    public String getProperty()
+    {
+        return property;
+    }
+
+    /**
+     * @param property the property to set
+     */
+    public void setProperty(String property)
+    {
+        this.property = property;
+    }
+
     /**
      * @param code
      * @param message
+     * @param property
      */
     public ResponseErrorObject(
                                String code,
-                               String message)
+                               String message,
+                               String property)
     {
         super();
         this.code = code;
         this.message = message;
+        this.property = property;
+    }
+
+    /**
+     * @return the jsonValue
+     */
+    public String getJsonValue()
+    {
+        return jsonValue;
+    }
+
+    /**
+     * @param jsonValue the jsonValue to set
+     */
+    public void setJsonValue(String jsonValue)
+    {
+        this.jsonValue = jsonValue;
     }
 
 }
