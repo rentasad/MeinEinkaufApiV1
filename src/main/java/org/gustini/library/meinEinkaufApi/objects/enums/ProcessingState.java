@@ -54,5 +54,9 @@ public enum ProcessingState
     /**
      * Die Bestellung ist nach einem gewissen Zeitraum nicht bei uns eingegangen
      */
-    not_arrived
+    not_arrived,
+    /**
+     * UPDATE 12.12.2019 - Neues ProcessingState "Problem" - nicht dokumentiert, aber in Verwendung.
+     */
+    problem
 }
