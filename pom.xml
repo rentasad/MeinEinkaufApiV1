@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>Gustini</groupId>
 	<artifactId>gustini.library.meinEinkaufApi</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>gustini.library.meinEinkaufApi</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -49,5 +49,8 @@
 		</dependency>
 	</dependencies>
 	<description>13.11.2019 Release Version 1.0.0
--&gt; MeinEinkaufApi Implementation</description>
+-&gt; MeinEinkaufApi Implementation
+
+21.01.2020 Release Version 1.0.1
+-&gt; Several small bugfixes</description>
 </project>
