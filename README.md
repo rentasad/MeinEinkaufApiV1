@@ -7,4 +7,4 @@ Description of this api in german:
 https://docs.meineinkauf.ch
 
 # State of Project:
-Livetest in progress
+stable
