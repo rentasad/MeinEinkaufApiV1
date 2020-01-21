@@ -58,5 +58,9 @@ public enum ProcessingState
     /**
      * UPDATE 12.12.2019 - Neues ProcessingState "Problem" - nicht dokumentiert, aber in Verwendung.
      */
-    problem
+    problem,
+    /**
+     * Update nach Info von MeinEinkauf - ein noch fehlender Status
+     */
+    cancellation
 }
