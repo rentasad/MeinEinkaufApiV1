@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * @author Matthias Staud
  *
  *
- *         Description:
+ *         Description:Generate and validate  {@link ResponseObject} from JSON String
  *
  */
 public class JsonToMeinEinkaufObject

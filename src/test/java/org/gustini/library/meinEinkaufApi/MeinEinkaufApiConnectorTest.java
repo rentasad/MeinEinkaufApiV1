@@ -1,5 +1,6 @@
 package org.gustini.library.meinEinkaufApi;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,18 +11,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 21.01.2020
+ * Unit Tests for learning to start/use/test the api
+ * 
+ * @author mst
+ *
+ */
 public class MeinEinkaufApiConnectorTest
 {
 
-    @Before
-    public void setUp() throws Exception
-    {
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-    }
 
     @Test
     public void testHelloWorldSendRequest() throws Exception
@@ -32,7 +31,7 @@ public class MeinEinkaufApiConnectorTest
         apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
-        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
+//        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
         
         String response = apiConnector.sendGetRequest(param).trim();
         String assertString = "{\"echo\":\"HelloWorld\",\"errors\":[],\"success\":true}";
@@ -56,15 +55,14 @@ public class MeinEinkaufApiConnectorTest
         String apiTestUrl ="api.meineinkauf.ch";
         String param =  "/v1/order";
         String apiKey = "MEINEINKAUF_TEST_API_KEY";
-//        String apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
-        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
+//        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
         
         String response = apiConnector.sendGetRequest(param).trim();
         String assertString = "{\"echo\":\"HelloWorld\",\"errors\":[],\"success\":true}";
         System.out.println(response);
-//        System.out.println(assertString);
+        System.out.println(assertString);
         
         JSONObject obj = new JSONObject(response);
         assertTrue(obj.getBoolean("success"));
@@ -147,10 +145,9 @@ public class MeinEinkaufApiConnectorTest
     @Test
     public void testSendPostRequest() throws Exception
     {
-        String apiTestUrl ="api-test.meineinkauf.ch";
+        String apiTestUrl ="api.meineinkauf.ch";
         String param =  "/v1/order";
         String apiKey = "MEINEINKAUF_TEST_API_KEY";
-        apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
         String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
@@ -160,14 +157,17 @@ public class MeinEinkaufApiConnectorTest
         System.out.println(responseString);
     }
 
+    /**
+     * Send a Request to get Orderinformations to an open Order - test will not successfull for the reason the order was not found
+     * @throws Exception
+     */
     @Test
     public void testSendGetRequest() throws Exception
     {
-        String orderNr = "940110216";
-        String apiTestUrl ="api-test.meineinkauf.ch";
+        String orderNr = "6019123456";
+        String apiTestUrl ="api.meineinkauf.ch";
         String param =  "/v1/order/" + orderNr;
-//        String apiKey = "MEINEINKAUF_TEST_API_KEY";
-        String apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
+        String apiKey = "MEINEINKAUF_TEST_API_KEY";
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
         
@@ -175,7 +175,8 @@ public class MeinEinkaufApiConnectorTest
         System.out.println(response);
         
         JSONObject obj = new JSONObject(response);
-        assertTrue(obj.getBoolean("success"));
+        assertFalse(obj.getBoolean("success"));
+        assertEquals(obj.getJSONArray("errors").getJSONObject(0).getString("message"), "No order found for given ordernumber 6019123456");
     }
     
 

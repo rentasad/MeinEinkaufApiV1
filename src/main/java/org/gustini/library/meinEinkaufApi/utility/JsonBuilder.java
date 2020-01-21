@@ -20,7 +20,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Matthias Staud
  *
  *
- *         Description:
+ *         Description:Utility to
+ *         - generate JSON-String from Java Object
+ *         - Validate JSON String
+ *         - get JsonObject from JSonString
  *
  */
 public class JsonBuilder

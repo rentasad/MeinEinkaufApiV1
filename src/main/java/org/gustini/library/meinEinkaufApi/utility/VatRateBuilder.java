@@ -24,6 +24,13 @@ import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 public class VatRateBuilder
 {
 
+	/**
+	 * Convert Contry and VatrateProcentValue to VatRateEnum
+	 * 
+	 * @param countryEnum
+	 * @param vatRateProcentValue
+	 * @return VatRate Enum 
+	 */
     public static VatRate getVatRateFromVatRateValue(CountryEnum countryEnum, double vatRateProcentValue)
     {
         vatRateProcentValue = BigDecimal.valueOf(vatRateProcentValue).setScale(1, RoundingMode.HALF_UP).doubleValue();

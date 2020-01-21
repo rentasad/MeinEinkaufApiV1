@@ -11,7 +11,6 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -65,14 +64,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *         HTTP Status Codes
  * 
  *         200 OK - Der Request war erfolgreich.
- *         201 Created - Die �bermittelten Daten wurden erfolgreich verarbeitet und es wurde zum Beispiel eine Bestellung erstellt.
+ *         201 Created - Die Uebermittelten Daten wurden erfolgreich verarbeitet und es wurde zum Beispiel eine Bestellung erstellt.
  *         400 Bad Request - Der Endpunkt existiert nicht oder wurde mit einer falschen HTTP-Methode aufgerufen.
  *         401 Unauthorized - Der Request konnte nicht authentifiziert werden.
  *         422 Unprocessable Entity - Die �bermittelten Daten waren nicht valide.
  *         500 Internal Server Error - Es gab ein Problem auf unserer Seite und wir arbeiten schnellstm�glich an einer L�sung. Die �bermittelten Daten wurden in der Regel nicht verarbeitet und ihr
  *         System muss den Request zu einem sp�teren Zeitpunkt erneut senden.
  *         503 Service Unavailable - W�hrend planm��iger Wartungsarbeiten wird dieser Status zur�ckgegeben. Die �bermittelten Daten wurden nicht verarbeitet und ihr System muss den Request zu einem
- *         sp�teren Zeitpunkt erneut senden.
+ *         spaeteren Zeitpunkt erneut senden.
  * 
  *         API Error Codes
  * 
@@ -160,7 +159,7 @@ public class MeinEinkaufApiConnector
     
     /**
      * 
-     * Description: 
+     * Description: Send post request and return JSON Responsestring
      * 
      * @param jsonString
      * @param urlParam
