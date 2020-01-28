@@ -25,10 +25,10 @@ public class MeinEinkaufApiConnectorTest
     @Test
     public void testHelloWorldSendRequest() throws Exception
     {
-        String apiTestUrl ="api-test.meineinkauf.ch";
+        String apiTestUrl ="api.meineinkauf.ch";
         String param =  "/v1/echo/HelloWorld/";
         String apiKey = "MEINEINKAUF_TEST_API_KEY";
-        apiKey = "fc649f70-416d-4569-b496-802f5bd024ef";
+        
         MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector("api", apiKey, apiTestUrl);
         
 //        String jsonString = JsonBuilder.getJsonStringFromObject(OrderTest.getTestOrder());
