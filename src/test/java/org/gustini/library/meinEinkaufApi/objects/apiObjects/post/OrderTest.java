@@ -2,7 +2,6 @@ package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.Tracking;
 import org.gustini.library.meinEinkaufApi.objects.enums.Currency;
 import org.gustini.library.meinEinkaufApi.objects.enums.PaymentType;
 import org.gustini.library.meinEinkaufApi.objects.enums.Salutation;

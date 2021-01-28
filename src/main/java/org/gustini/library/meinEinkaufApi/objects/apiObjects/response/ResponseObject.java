@@ -4,7 +4,6 @@
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.response;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Gustini GmbH (2019)

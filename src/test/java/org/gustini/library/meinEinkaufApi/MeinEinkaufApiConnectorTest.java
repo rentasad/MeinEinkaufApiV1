@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.OrderTest;
 import org.gustini.library.meinEinkaufApi.utility.JsonBuilder;
 import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 /**

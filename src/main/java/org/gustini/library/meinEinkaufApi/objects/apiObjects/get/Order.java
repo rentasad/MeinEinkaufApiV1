@@ -3,7 +3,6 @@
  */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.get;
 
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.get.Consignment;
 import org.gustini.library.meinEinkaufApi.objects.enums.ProcessingState;
 
 /**
