@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>gustini.library.meinEinkaufApi</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<name>gustini.library.meinEinkaufApi</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -20,13 +19,10 @@
 				<version>3.8.1</version>
 				<configuration>
 					<!-- <source>1.8</source> -->
-					<release>15</release>
-					<compilerArgs>
-						--enable-preview
-					</compilerArgs>
+					<release>11</release>
 				</configuration>
 			</plugin>
-			<!--  The Maven-Surefire-Plugin is needed to make Unittests while building-->
+			<!-- The Maven-Surefire-Plugin is needed to make Unittests while building -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -46,10 +42,11 @@
 			<version>5.2.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.10.7</version>
+			<version>2.12.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>
@@ -92,6 +89,8 @@
 -&gt; MeinEinkaufApi Implementation
 
 21.01.2020 Release Version 1.0.1
--&gt; Several small bugfixes</description>
+-&gt; Several small bugfixes
+30.08.2021  Release 1.1.0 
+Add Salutation Values to serialisation from empty Saltation, now named as Salutation.NOTHING</description>
 	<groupId>Gustini</groupId>
 </project>

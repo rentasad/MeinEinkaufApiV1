@@ -41,7 +41,7 @@ public class OrderTest
         String customerNumber = "44122265843";
         Customer customer = new Customer(customerNumber);
         customer.setContactEmail("max.mustermann@gustini.de");
-        Salutation salutation = Salutation.Herr;
+        Salutation salutation = Salutation.NOTHING;
         String firstName = "Max";
         String lastName = "Mustermann";
         String street = "Mustergasse";
