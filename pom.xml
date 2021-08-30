@@ -92,5 +92,5 @@
 -&gt; Several small bugfixes
 30.08.2021  Release 1.1.0 
 Add Salutation Values to serialisation from empty Saltation, now named as Salutation.NOTHING</description>
-	<groupId>Gustini</groupId>
+	<groupId>gustini</groupId>
 </project>
