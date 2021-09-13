@@ -37,6 +37,19 @@ stable
     }
 ```
 
+# pom.xml insert text
+
+For dependency inserting copy & paste in your pom.xml:
+
+```
+	<dependency>
+		<groupId>gustini</groupId>
+		<artifactId>gustini.library.meinEinkaufApi</artifactId>
+		<version>1.1.0</version>
+	</dependency>
+```
+
+
 more Informations to start you will find in the Unit Tests: 
 [MeinEinkaufApiConnectorTest](src/test/java/org/gustini/library/meinEinkaufApi/MeinEinkaufApiConnectorTest.java)
 
