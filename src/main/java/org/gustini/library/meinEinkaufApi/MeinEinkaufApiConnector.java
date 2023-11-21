@@ -1,306 +1,150 @@
 /**
- * 
+ *
  */
 package org.gustini.library.meinEinkaufApi;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.apache.log4j.BasicConfigurator;
-import org.gustini.library.meinEinkaufApi.objects.apiObjects.MeinEinkaufRequestException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Gustini GmbH (2019)
- * Creation: 11.06.2019
- * application.meineinkauf
- * gustini.application.meineinkauf.module.meinEinkaufApi.connector
- * 
- * @author Matthias Staud
- *
- *
- *         Description:
- * 
- *         Aufruf:
- * 
- *         curl https://api.meineinkauf.ch/v1/echo/HelloWorld \
- *         -X GET \
- *         -u 'api:MEINEINKAUF_TEST_API_KEY'
- * 
- *         Antwort:
- * 
- *         {
- *         "echo": "HelloWorld",
- *         "errors": [],
- *         "success": true,
- *         "testMode": true
- *         }
- * 
- * 
- *         HTTP Status Codes
- * 
- *         200 OK - Der Request war erfolgreich.
- *         201 Created - Die Uebermittelten Daten wurden erfolgreich verarbeitet und es wurde zum Beispiel eine Bestellung erstellt.
- *         400 Bad Request - Der Endpunkt existiert nicht oder wurde mit einer falschen HTTP-Methode aufgerufen.
- *         401 Unauthorized - Der Request konnte nicht authentifiziert werden.
- *         422 Unprocessable Entity - Die �bermittelten Daten waren nicht valide.
- *         500 Internal Server Error - Es gab ein Problem auf unserer Seite und wir arbeiten schnellstm�glich an einer L�sung. Die �bermittelten Daten wurden in der Regel nicht verarbeitet und ihr
- *         System muss den Request zu einem sp�teren Zeitpunkt erneut senden.
- *         503 Service Unavailable - W�hrend planm��iger Wartungsarbeiten wird dieser Status zur�ckgegeben. Die �bermittelten Daten wurden nicht verarbeitet und ihr System muss den Request zu einem
- *         spaeteren Zeitpunkt erneut senden.
- * 
- *         API Error Codes
- * 
- *         E0000 ApiKey is missing - Sie haben keinen ApiKey angegeben.
- *         E0001 Unknown ApiKey - Der angegebene ApiKey ist unbekannt.
- *         E1000 Invalid JSON - Die �bermittelten Daten sind nicht valide. Eine detaillierte Fehlermeldung wird ebenfalls zur�ckgegeben.
- *         E1001 No order found for given ordernumber - Die angegebene Bestellung existiert nicht.
- *         E1002 No return consignment found for given reference - Die angegebene Retoure existiert nicht.
- *
- * 
+ * Provides a connector for interacting with Mein Einkauf API.
+ * This connector supports sending GET and POST requests to the API and handling responses.
  */
+@Slf4j
 public class MeinEinkaufApiConnector
 {
-    private final String apiKey;
-    private final String apiHost;
-    private final String username;
+	@Getter private final String apiKey;
+	private final String apiHost;
+	private final String username;
 
-    public String getApiKey()
-    {
-        return apiKey;
-    }
+	/**
+	 * Constructs a new MeinEinkaufApiConnector with the specified credentials and API host.
+	 *
+	 * @param username The username for authentication.
+	 * @param apiKey   The API key for authentication.
+	 * @param apiHost  The host URL for the Mein Einkauf API.
+	 */
+	public MeinEinkaufApiConnector(String username, String apiKey, String apiHost)
+	{
+		this.username = username;
+		this.apiKey = apiKey;
+		this.apiHost = apiHost;
+	}
 
-    /**
-     * @param apiKey
-     * @param apiUrl
-     */
-    public MeinEinkaufApiConnector(
-                                   String username,
-                                   String apiKey,
-                                   String apiHost)
-    {
-        super();
-        this.username = username;
-        this.apiKey = apiKey;
-        this.apiHost = apiHost;
-        BasicConfigurator.configure();
-    }
+	/**
+	 * Sends a GET request to the specified URL.
+	 *
+	 * @param urlParam The additional URL parameters to be appended to the base URL.
+	 * @return A string representing the response received from the server.
+	 * @throws IOException        If an I/O error occurs during the HTTP request.
+	 * @throws URISyntaxException If the provided URL is not a valid URI.
+	 */
+	public String sendGetRequest(final String urlParam) throws IOException, URISyntaxException
+	{
+		AtomicReference<String> responseString = new AtomicReference<>();
 
-    /**
-     * 
-     * Description:
-     * 
-     * @param urlParam
-     * @return
-     * @throws IOException
-     *             Creation: 11.06.2019 by mst
-     */
-    public String sendGetRequest(final String urlParam ) throws IOException
-    {
-        String responseString = null;
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        
-        HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
+		try (CloseableHttpClient httpClient = HttpClients.custom()
+														 .build())
+		{
+			URI uri = new URI("https", this.apiHost, urlParam, null);
+			final HttpGet httpGet = new HttpGet(uri);
+			httpGet.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
+																		   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
+			log.info("Executing request " + httpGet.getMethod() + " " + httpGet.getUri());
+			// SEND REQUEST
 
-        // Create AuthCache instance
-        AuthCache authCache = new BasicAuthCache();
-        // Generate BASIC scheme object and add it to the local auth cache
-        BasicScheme basicAuth = new BasicScheme();
-        authCache.put(targetHost, basicAuth);
+			httpClient.execute(httpGet, response -> {
+				responseString.set(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
+				return responseString;
+			});
 
-        // Add AuthCache to the execution context
-        HttpClientContext context = HttpClientContext.create();
-        context.setCredentialsProvider(credsProvider);
-        context.setAuthCache(authCache);
+			return responseString.get();
+		}
+	}
 
-        HttpGet httpget = new HttpGet(urlParam);
-        for (int i = 0; i < 1; i++)
-        {
-            // SEND REQUEST
-            CloseableHttpResponse response = httpclient.execute(targetHost, httpget, context);
-            try
-            {
-                HttpEntity entity = response.getEntity();
-                responseString = convertStreamToString(entity.getContent());
-                System.out.println(responseString);
-            } finally
-            {
-                response.close();
-            }
-        }
-        return responseString;
-    }
-    
-    /**
-     * 
-     * Description: Send post request and return JSON Responsestring
-     * 
-     * @param jsonString
-     * @param urlParam
-     * @return
-     * @throws IOException
-     * @throws MeinEinkaufRequestException
-     * Creation: 17.06.2019 by mst
-     */
-    public String sendPostRequest(final String jsonString, final String urlParam) throws IOException, MeinEinkaufRequestException
-    {
-        String responseString = null;
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        
-        HttpHost targetHost = new HttpHost(this.apiHost, 443, "https");
-        
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials("api", this.apiKey));
+	/**
+	 * Sends a POST request to the specified URL with the provided JSON payload.
+	 *
+	 * @param jsonString The JSON payload to be included in the request.
+	 * @param urlParam   The additional URL parameters to be appended to the base URL.
+	 * @return A string representing the response received from the server.
+	 * @throws IOException        If an I/O error occurs during the HTTP request.
+	 * @throws URISyntaxException If the provided URL is not a valid URI.
+	 */
+	public String sendPostRequest(final String jsonString, final String urlParam) throws IOException, URISyntaxException
+	{
+		AtomicReference<String> responseString = new AtomicReference<>();
 
-        // Create AuthCache instance
-        AuthCache authCache = new BasicAuthCache();
-        // Generate BASIC scheme object and add it to the local auth cache
-        BasicScheme basicAuth = new BasicScheme();
-        authCache.put(targetHost, basicAuth);
+		try (CloseableHttpClient httpClient = HttpClients.custom()
+														 .build())
+		{
+			StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON.getCharset());
+			URI uri = new URI("https", this.apiHost, urlParam, null);
+			final HttpPost httpPost = new HttpPost(uri);
+			httpPost.setEntity(requestEntity);
+			httpPost.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
+																		   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
+			log.info("Executing request " + httpPost.getMethod() + " " + httpPost.getUri());
+			// SEND REQUEST
 
-        // Add AuthCache to the execution context
-        HttpClientContext context = HttpClientContext.create();
-        context.setCredentialsProvider(credsProvider);
-        context.setAuthCache(authCache);
-        
-        StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON.getCharset());
-        HttpPost httpPost = new HttpPost(urlParam);
-        httpPost.setEntity(requestEntity);
-        for (int i = 0; i < 1; i++)
-        {
-            StringBuilder textBuilder = new StringBuilder();
-            try (Reader reader = new BufferedReader(new InputStreamReader
-              (requestEntity.getContent(), Charset.forName(StandardCharsets.UTF_8.name())))) {
-                int c = 0;
-                while ((c = reader.read()) != -1) {
-                    textBuilder.append((char) c);
-                }
-            }
-            
-            
-            System.out.println(textBuilder.toString());
-            CloseableHttpResponse response = httpclient.execute(targetHost, httpPost, context);
-            try
-            {
-                int statusCode;
-                statusCode = response.getStatusLine().getStatusCode();
-                if (StatusCodesEnum.getStatusCodesEnumFromStatusInteger(statusCode) == StatusCodesEnum.CREATED_201)
-                {
-//                        HttpEntity responsEntity = response.getEntity();
-                        responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-                        System.out.println(responseString);
-                }else
-                {
-                    /*
-                     * Im Fehlerfall wurde früher eine Exception ausgegeben - Das wird jetzt unterbunden.
-                     * Es erfolgt nur eine gesonderte Ausgabe
-                     */
-                    responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-                    System.err.println("ResponseString with Error:");
-                    System.err.println(responseString);
-                    
-//                    throw new MeinEinkaufRequestException(response);
-                }
+			httpClient.execute(httpPost, response -> {
+				responseString.set(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
+				return responseString;
+			});
 
-            } finally
-            {
-                response.close();
-            }
-        }
-        return responseString;
-    }
-
-    /**
-     * @return the apiHost
-     */
-    public String getApiHost()
-    {
-        return apiHost;
-    }
-
-    /**
-     * 
-     * Description: 
-     * 
-     * @param is
-     * @return
-     * Creation: 17.06.2019 by mst
-     */
-    private static String convertStreamToString(InputStream is) {
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-    
-    /**
-     * @return the username
-     */
-    public String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * 
-     * Description: Verify validity of JSON String
-     * 
-     * @param jsonInString
-     * @return
-     *         Creation: 13.06.2019 by mst
-     */
-    public static boolean isJSONValid(String jsonInString)
-    {
-        try
-        {
-            final ObjectMapper mapper = new ObjectMapper();
-            mapper.readTree(jsonInString);
-            
-            return true;
-        } catch (IOException e)
-        {
-            return false;
-        }
-    }
+			return responseString.get();
+		}
+	}
+	/**
+	 * Converts the input stream to a String.
+	 *
+	 * @param inputStream The input stream to convert.
+	 * @return The String representation of the input stream.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static String convertStreamToString(InputStream inputStream) throws IOException
+	{
+		StringBuilder textBuilder = new StringBuilder();
+		try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)))
+		{
+			int c = 0;
+			while ((c = reader.read()) != -1)
+			{
+				textBuilder.append((char) c);
+			}
+		}
+		return textBuilder.toString();
+	}
+	/**
+	 * Checks if the given String is a valid JSON.
+	 *
+	 * @param jsonInString The String to check.
+	 * @return True if the String is a valid JSON, false otherwise.
+	 */
+	public static boolean isJSONValid(String jsonInString)
+	{
+		try
+		{
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.readTree(jsonInString);
+			return true;
+		} catch (IOException e)
+		{
+			return false;
+		}
+	}
 }
