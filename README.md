@@ -1,5 +1,5 @@
-# MeinEinkaufApiV1 -  Java Implementation V 1.0.1
-MeinEinkauf API v1
+# MeinEinkaufApiV1 -  Java Implementation V 1.2
+MeinEinkauf API v1.2
 
 Implementation of the REST-API from MeinEinkauf.CH
 
@@ -45,7 +45,7 @@ For dependency inserting copy & paste in your pom.xml:
 	<dependency>
 		<groupId>gustini</groupId>
 		<artifactId>gustini.library.meinEinkaufApi</artifactId>
-		<version>1.1.0</version>
+		<version>1.2</version>
 	</dependency>
 ```
 
