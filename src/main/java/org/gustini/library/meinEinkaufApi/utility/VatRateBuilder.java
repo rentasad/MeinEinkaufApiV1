@@ -1,72 +1,52 @@
-/**
- * 
- */
 package org.gustini.library.meinEinkaufApi.utility;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import org.gustini.library.meinEinkaufApi.objects.enums.CountryEnum;
 import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
-/**
- * Gustini GmbH (2019)
- * Creation: 04.07.2019
- * gustini.library.meinEinkaufApi
- * org.gustini.library.meinEinkaufApi.utility
- * 
- * @author Matthias Staud
- *
- *
- *         Description: Convert VatRate from Vatrate Value
- *
- */
+import java.io.FileNotFoundException;
+import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.stream.Collectors;
+
 public class VatRateBuilder
 {
 
-	/**
-	 * Convert Contry and VatrateProcentValue to VatRateEnum
-	 * 
-	 * @param countryEnum
-	 * @param vatRateProcentValue
-	 * @return VatRate Enum 
-	 */
-    public static VatRate getVatRateFromVatRateValue(CountryEnum countryEnum, double vatRateProcentValue)
-    {
-        vatRateProcentValue = BigDecimal.valueOf(vatRateProcentValue).setScale(1, RoundingMode.HALF_UP).doubleValue();
-        switch (countryEnum)
-        {
-            case CH:
-                if (vatRateProcentValue == 2.4 || vatRateProcentValue == 2.5 || vatRateProcentValue == 2.6 || vatRateProcentValue == 3.7 || vatRateProcentValue == 3.8)
-                {
-                    return VatRate.reduced;
-                } else if (vatRateProcentValue == 7.6 || vatRateProcentValue == 7.8 || vatRateProcentValue == 8|| vatRateProcentValue == 7.7)
-                {
-                    return VatRate.standard;
-                } else if (vatRateProcentValue == 0)
-                {
-                    return VatRate.none;
-                } else
-                {
-                    return null;
-                }
-            case DE:
-                if (vatRateProcentValue == 16 || vatRateProcentValue == 19 || vatRateProcentValue == 15)
-                {
-                    return VatRate.standard;
-                } else if (vatRateProcentValue == 7)
-                {
-                    return VatRate.reduced;
-                } else if (vatRateProcentValue == 0)
-                {
-                    return VatRate.none;
-                } else
-                {
-                    return null;
-                }
-            default:
-                return null;
-        }
-    }
+	private static Properties vatRatesProps = null;
 
+	/**
+     * Retrieves the VatRate enumeration value corresponding to the given country and VAT rate percentage value.
+     *
+     * @param countryEnum The country for which the VAT rate is queried.
+     * @param vatRateProcentValue The VAT rate percentage value.
+     * @return Optional<VatRate> The VatRate enumeration value if a match is found, otherwise an empty Optional.
+     * @throws IOException If there is an error loading the VatRates.properties file.
+     */
+    public static Optional<VatRate> getVatRateFromVatRateValue(CountryEnum countryEnum, double vatRateProcentValue) throws IOException
+    {
+        if (vatRatesProps == null)
+
+        {
+            vatRatesProps = new Properties();
+            vatRatesProps.load(VatRateBuilder.class.getClassLoader().getResourceAsStream("VatRates.properties"));
+        }
+		vatRateProcentValue = BigDecimal.valueOf(vatRateProcentValue)
+										.setScale(1, RoundingMode.HALF_UP)
+										.doubleValue();
+		for (VatRate vatRate : VatRate.values())
+		{
+			String key = "vatRate." + countryEnum.name() + "." + vatRate.name();
+			List<Double> vatRates = Arrays.stream(vatRatesProps.getProperty(key)
+															   .split(","))
+										  .map(Double::parseDouble)
+										  .collect(Collectors.toList());
+			if (vatRates.contains(vatRateProcentValue))
+			{
+				return Optional.of(vatRate);
+			}
+		}
+		return Optional.empty();
+	}
 }
