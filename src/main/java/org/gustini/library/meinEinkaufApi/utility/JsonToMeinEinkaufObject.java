@@ -17,27 +17,28 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Gustini GmbH (2019) Creation: 09.07.2019 gustini.library.meinEinkaufApi
- * org.gustini.library.meinEinkaufApi.utility
- * 
- * @author Matthias Staud
- *
- *
- *         Description:Generate and validate  {@link ResponseObject} from JSON String
- *
+ * A utility class for processing and converting JSON strings into objects used by
+ * the Mein Einkauf service. The class provides methods for parsing JSON responses
+ * from the service, validating the structure of the JSON, and transforming data
+ * into domain-specific objects such as {@link ResponseObject} and {@link Order}.
  */
 public class JsonToMeinEinkaufObject
 {
 	/**
-	 * 
-	 * Description:
-	 * 
-	 * @param resultJsonString
-	 * @return Creation: 09.07.2019 by mst
+	 * Converts a JSON string into a {@link ResponseObject}, extracting relevant information
+	 * such as success status, errors, and order details if available. If the input JSON
+	 * string is invalid or does not represent a valid response, a {@link ResponseObject}
+	 * with appropriate error information is returned.
+	 *
+	 * @param resultJsonString the JSON string to be converted into a {@link ResponseObject}.
+	 *                         It must be a valid string containing JSON data.
+	 * @return a {@link ResponseObject} containing parsed data such as success status,
+	 *         error details, and order information if present. If the input is invalid,
+	 *         the returned object will contain error details explaining the issue.
 	 */
 	public static ResponseObject getResponseObjectFromJsonString(String resultJsonString)
 	{
-		ResponseObject responseObject = null;
+		ResponseObject responseObject;
 		if (JsonBuilder.isJSONValid(resultJsonString))
 		{
 			JSONObject jo = JsonBuilder.getJsonObjectFromJsonString(resultJsonString);
@@ -46,7 +47,7 @@ public class JsonToMeinEinkaufObject
 				boolean success = jo.getBoolean("success");
 				ArrayList<ResponseErrorObject> errorsArrayList = new ArrayList<>();
 				JSONArray joArray = jo.getJSONArray("errors");
-				// Wenn Fehler vorhanden sind erstelle ResponseErrorObjects
+				// Wenn Fehler vorhanden sind, erstelle ResponseErrorObjects
 				for (Object errorJsonObject : joArray)
 				{
 					if (errorJsonObject instanceof JSONObject)
@@ -64,7 +65,7 @@ public class JsonToMeinEinkaufObject
 
 				}
 				responseObject = new ResponseObject(success, errorsArrayList.toArray(new ResponseErrorObject[0]));
-				// Prüfe ob es Orders gibt
+				// Prüfe, ob es Orders gibt
 				if (jo.has("orders"))
 				{
 					boolean hasValues = true;
@@ -123,12 +124,13 @@ public class JsonToMeinEinkaufObject
 	}
 
 	/**
-	 * 
-	 * Description: Prüft ob die Elemente der ersten Ebene des JSONObjekts vorhanden
-	 * sind.
-	 * 
-	 * @param jo
-	 * @return Creation: 09.07.2019 by mst
+	 * Validates if the given JSONObject contains the necessary keys required for a valid response
+	 * from MeinEinkauf. The required keys are "success" and "errors".
+	 *
+	 * @param jo The JSONObject to be validated. It is expected to contain specific keys required
+	 *           for a response to be considered valid.
+	 * @return true if the JSONObject contains all required keys ("success" and "errors"),
+	 *         false otherwise.
 	 */
 	protected static boolean isValidResponseValueFromMeinEinkauf(JSONObject jo)
 	{
@@ -154,10 +156,9 @@ public class JsonToMeinEinkaufObject
 		ArrayList<Order> joArrayList = new ArrayList<>();
 		for (Object object : orderJsonArray)
 		{
-			if (object instanceof JSONObject)
+			if (object instanceof JSONObject jo)
 			{
-				JSONObject jo = (JSONObject) object;
-				int id = jo.getInt("id");
+                int id = jo.getInt("id");
 				String created = jo.getString("created");
 				String orderNumber = jo.getString("orderNumber");
 				String orderDate = jo.getString("orderDate");
@@ -168,10 +169,9 @@ public class JsonToMeinEinkaufObject
 				ArrayList<ProcessingStateHistory> processingStateHistories = new ArrayList<>();
 				for (Object processingStateObject : processingStateJsonArray)
 				{
-					if (processingStateObject instanceof JSONObject)
+					if (processingStateObject instanceof JSONObject processingStateJsonObject)
 					{
-						JSONObject processingStateJsonObject = (JSONObject) processingStateObject;
-						String state, changed;
+                        String state, changed;
 						state = processingStateJsonObject.getString("state");
 						changed = processingStateJsonObject.getString("changed");
 						ProcessingStateHistory stateHistory = new ProcessingStateHistory(state, changed);
@@ -191,20 +191,20 @@ public class JsonToMeinEinkaufObject
 				for (Object consignmentObject : consignmentsJsonArray)
 				{
 					
-					if (consignmentObject instanceof JSONObject)
+					if (consignmentObject instanceof JSONObject consignmentJSONObject)
 					{
-						/**
+						/*
 						 * In seltenen Fällen, wenn eine Sendung den Status "Problem" hat, können ConsignmentObjekte "null" enthalten -> In dem Fall wird die Info nicht übernommen.
 						 */
-						if (((JSONObject) consignmentObject).isNull("externalId") == false)
+
+						if (!consignmentJSONObject.isNull("externalId"))
 						{
 
-							String externalId = ((JSONObject) consignmentObject).getString("externalId");
+							String externalId = consignmentJSONObject.getString("externalId");
 							// if (id == 11946)
 							// System.out.println("STOP");
 							ArrayList<TrackingResponse> gasLabelsArrayList = new ArrayList<>();
-							JSONObject consignmentJSONObject = (JSONObject) consignmentObject;
-							if (consignmentJSONObject.isNull("gasLabels") == false)
+                            if (!consignmentJSONObject.isNull("gasLabels"))
 							{
 								JSONArray gasLabelsJsonArray = consignmentJSONObject.getJSONArray("gasLabels");
 								for (Object gasLabelJSONObject : gasLabelsJsonArray)
