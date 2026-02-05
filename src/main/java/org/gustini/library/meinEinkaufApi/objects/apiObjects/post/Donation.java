@@ -1,62 +1,40 @@
-/**
- * 
- */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
+import lombok.Data;
 import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
 /**
+ * Donation information.
+ *
  * Gustini GmbH (2019)
  * Creation: 11.06.2019
- * gustini.library.meinEinkaufApi
- * org.gustini.library.meinEinkaufApi.objects
- * 
+ *
  * @author Matthias Staud
- *
- *
- * Description:
- *
  */
+@Data
 public class Donation
 {
+    /** The name of the donation */
     private final String name;
-    private final double grossPrice;// Der Bruttopreis der Spende
+
+    /** The gross price of the donation */
+    private final double grossPrice;
+
+    /** The VAT rate associated with the donation */
     private final VatRate vatRate;
+
     /**
-     * @param name
-     * @param grossPrice
-     * @param vatRate
+     * Constructor for Donation
+     *
+     * @param name The name of the donation
+     * @param grossPrice The gross price of the donation
+     * @param vatRate The VAT rate associated with the donation
      */
-    public Donation(
-                    String name,
-                    double grossPrice,
-                    VatRate vatRate)
+    public Donation(String name, double grossPrice, VatRate vatRate)
     {
         super();
         this.name = name;
         this.grossPrice = grossPrice;
         this.vatRate = vatRate;
     }
-    /**
-     * @return the name
-     */
-    public String getName()
-    {
-        return name;
-    }
-    /**
-     * @return the grossPrice
-     */
-    public double getGrossPrice()
-    {
-        return grossPrice;
-    }
-    /**
-     * @return the vatRate
-     */
-    public VatRate getVatRateEnum()
-    {
-        return vatRate;
-    }
-    
 }

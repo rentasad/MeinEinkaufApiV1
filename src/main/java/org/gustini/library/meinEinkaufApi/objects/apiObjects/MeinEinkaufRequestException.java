@@ -13,10 +13,23 @@ package org.gustini.library.meinEinkaufApi.objects.apiObjects;
  *
  */
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.http.HttpResponse;
 
+@Setter
+@Getter
 public class MeinEinkaufRequestException extends Exception
 {
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the httpResponse
+      * @param httpResponse the httpResponse to set
+     */
     private HttpResponse httpResponse = null;
     /**
      * 
@@ -31,20 +44,7 @@ public class MeinEinkaufRequestException extends Exception
         super();
         this.httpResponse = httpResponse;
     }
-    /**
-     * @return the httpResponse
-     */
-    public HttpResponse getHttpResponse()
-    {
-        return httpResponse;
-    }
-    /**
-     * @param httpResponse the httpResponse to set
-     */
-    public void setHttpResponse(HttpResponse httpResponse)
-    {
-        this.httpResponse = httpResponse;
-    }
+
     /**
      * 
      */
