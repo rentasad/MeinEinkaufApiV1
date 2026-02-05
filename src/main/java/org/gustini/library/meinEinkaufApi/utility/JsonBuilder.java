@@ -18,77 +18,67 @@ import org.json.JSONObject;
  * org.gustini.library.meinEinkaufApi.utility
  *
  * @author Matthias Staud
- *
- *
- *         Description:Utility to
- *         - generate JSON-String from Java Object
- *         - Validate JSON String
- *         - get JsonObject from JSonString
+ * <p>
+ * <p>
+ * Description:Utility to
+ * - generate JSON-String from Java Object
+ * - Validate JSON String
+ * - get JsonObject from JSonString
  *
  */
 @Slf4j
-public class JsonBuilder
-{
-	/**
-	 *
-	 * Description: Convert Object to JSON String
-	 *
-	 * @param object
-	 * @return
-	 * @throws JsonProcessingException
-	 *             Creation: 11.06.2019 by mst
-	 */
-	public static String getJsonStringFromObject(Object object) throws JsonProcessingException
-	{
-		ObjectMapper mapper = new ObjectMapper();
-		// Java object to JSON file
-		// mapper.writeValue(new File("c:\\temp\\staff.json"), new Staff());
+public class JsonBuilder {
+    /**
+     * Converts a given Java object into its JSON string representation.
+     *
+     * @param object The Java object to be serialized into a JSON string.
+     * @return A JSON string representation of the provided object.
+     * @throws JsonProcessingException If an error occurs during the serialization process.
+     */
+    public static String getJsonStringFromObject(Object object) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        // Java object to JSON file
+        // mapper.writeValue(new File("c:\\temp\\staff.json"), new Staff());
 
-		// Java object to JSON string
-		mapper.setSerializationInclusion(Include.NON_NULL);
-		return mapper.writeValueAsString(object);
-	}
+        // Java object to JSON string
+        mapper.setDefaultPropertyInclusion(Include.NON_NULL);
+        return mapper.writeValueAsString(object);
+    }
 
-	/**
-	 *
-	 * Description: Return true if it's valid JSON
-	 * Source: https://stackoverflow.com/questions/10174898/how-to-check-whether-a-given-string-is-valid-json-in-java
-	 *
-	 * @param jsonString
-	 * @return
-	 * Creation: 09.07.2019 by mst
-	 */
-	public static boolean isJSONValid(String jsonString)
-	{
-		try
-		{
-			new JSONObject(jsonString);
-		} catch (JSONException ex)
-		{
-			// edited, to include @Arthur's comment
-			// e.g. in case JSONArray is valid as well...
-			try
-			{
-				new JSONArray(jsonString);
-			} catch (JSONException ex1)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * Validates if the given string is a valid JSON. The method supports validation
+     * for both JSON objects and JSON arrays.
+     * Source: <a href="https://stackoverflow.com/questions/10174898/how-to-check-whether-a-given-string-is-valid-json-in-java">...</a>
+     *
+     * @param jsonString The string to be checked for valid JSON format.
+     * @return {@code true} if the input string is a valid JSON object or array,
+     * {@code false} otherwise.
+     */
+    public static boolean isJSONValid(String jsonString) {
+        try {
+            new JSONObject(jsonString);
+        } catch (JSONException ex) {
+            // edited, to include @Arthur's comment
+            // e.g. in case JSONArray is valid as well...
+            try {
+                new JSONArray(jsonString);
+            } catch (JSONException ex1) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	/**
-	 *
-	 * Description:
-	 *
-	 * @param jsonString
-	 * @return
-	 * Creation: 09.07.2019 by mst
-	 */
-	public static JSONObject getJsonObjectFromJsonString(String jsonString)
-	{
-		return new JSONObject(jsonString);
-	}
+    /**
+     * Converts a JSON string into a {@code JSONObject}.
+     *
+     * @param jsonString The JSON string to be converted into a {@code JSONObject}.
+     *                   Must not be null or empty, and must represent a valid JSON object.
+     * @return A {@code JSONObject} representation of the provided JSON string.
+     * @throws JSONException If the provided string is not a valid JSON object.
+     */
+    public static JSONObject getJsonObjectFromJsonString(String jsonString) {
+        return new JSONObject(jsonString);
+    }
 
 }

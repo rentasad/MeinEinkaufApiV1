@@ -1,46 +1,54 @@
-/**
- * 
- */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
+import lombok.Data;
 import org.gustini.library.meinEinkaufApi.objects.enums.VatRate;
 
 /**
+ * Article information.
+ *
  * Gustini GmbH (2019)
  * Creation: 11.06.2019
- * application.meineinkauf
- * org.gustini.library.meinEinkaufApi.objects
- * 
+ *
  * @author Matthias Staud
- *
- *
- * Description:
- *
  */
+@Data
 public class Article
 {
-    
+    /** The article number */
     private final String articleNumber;
+
+    /** The name of the article */
     private final String name;
+
+    /** The quantity of the article */
     private final Integer quantity;
+
+    /** The gross weight of the article */
     private double grossWeight;
+
+    /** The gross price of the article */
     private final double grossPrice;
+
+    /** The VAT rate for the article */
     private final VatRate vatRate;
+
+    /** External identifier */
     private String externalId;
+
+    /** Article attributes (optional) */
     private Attributes attributes;
+
     /**
-     * @param articleNumber
-     * @param name
-     * @param quantity
-     * @param grossPrice
-     * @param vatRate
+     * Constructor for Article
+     *
+     * @param articleNumber The article number
+     * @param name The name of the article
+     * @param quantity The quantity
+     * @param grossPrice The gross price
+     * @param vatRate The VAT rate
      */
-    public Article(
-                   String articleNumber,
-                   String name,
-                   Integer quantity,
-                   double grossPrice,
-                   VatRate vatRate)
+    public Article(String articleNumber, String name, Integer quantity,
+                   double grossPrice, VatRate vatRate)
     {
         super();
         this.articleNumber = articleNumber;
@@ -49,86 +57,4 @@ public class Article
         this.grossPrice = grossPrice;
         this.vatRate = vatRate;
     }
-    /**
-     * @return the grossWeight
-     */
-    public double getGrossWeight()
-    {
-        return grossWeight;
-    }
-    /**
-     * @param grossWeight the grossWeight to set
-     */
-    public void setGrossWeight(double grossWeight)
-    {
-        this.grossWeight = grossWeight;
-    }
-    /**
-     * @return the attributes
-     */
-    public Attributes getAttributes()
-    {
-        return attributes;
-    }
-    /**
-     * @param attributes the attributes to set
-     */
-    public void setAttributes(Attributes attributes)
-    {
-        this.attributes = attributes;
-    }
-    /**
-     * @return the articleNumber
-     */
-    public String getArticleNumber()
-    {
-        return articleNumber;
-    }
-    /**
-     * @return the name
-     */
-    public String getName()
-    {
-        return name;
-    }
-    /**
-     * @return the quantity
-     */
-    public Integer getQuantity()
-    {
-        return quantity;
-    }
-    /**
-     * @return the grossPrice
-     */
-    public double getGrossPrice()
-    {
-        return grossPrice;
-    }
-    /**
-     * @return the vatRate
-     */
-    public VatRate getVatRate()
-    {
-        return vatRate;
-    }
-    /**
-     * @return the externalId
-     * Eindeutiger Identifier im Kundensystem
-     */
-    public String getExternalId()
-    {
-        return externalId;
-    }
-    /**
-     * @param externalId the externalId to set
-     * Eindeutiger Identifier im Kundensystem
-     */
-    public void setExternalId(String externalId)
-    {
-        this.externalId = externalId;
-    }
-
-
-
 }

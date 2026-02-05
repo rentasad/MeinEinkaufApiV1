@@ -55,24 +55,11 @@ public class MeinEinkaufApiConnector
 	 */
 	public String sendGetRequest(final String urlParam) throws IOException, URISyntaxException
 	{
-		AtomicReference<String> responseString = new AtomicReference<>();
-
-		try (CloseableHttpClient httpClient = HttpClients.custom()
-														 .build())
+		try (CloseableHttpClient httpClient = HttpClients.custom().build())
 		{
 			URI uri = new URI("https", this.apiHost, urlParam, null);
 			final HttpGet httpGet = new HttpGet(uri);
-			httpGet.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
-																		   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
-			log.info("Executing request " + httpGet.getMethod() + " " + httpGet.getUri());
-			// SEND REQUEST
-
-			httpClient.execute(httpGet, response -> {
-				responseString.set(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
-				return responseString;
-			});
-
-			return responseString.get();
+			return executeRequest(httpClient, httpGet);
 		}
 	}
 
@@ -87,27 +74,36 @@ public class MeinEinkaufApiConnector
 	 */
 	public String sendPostRequest(final String jsonString, final String urlParam) throws IOException, URISyntaxException
 	{
-		AtomicReference<String> responseString = new AtomicReference<>();
-
-		try (CloseableHttpClient httpClient = HttpClients.custom()
-														 .build())
+		try (CloseableHttpClient httpClient = HttpClients.custom().build())
 		{
 			StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON.getCharset());
 			URI uri = new URI("https", this.apiHost, urlParam, null);
 			final HttpPost httpPost = new HttpPost(uri);
 			httpPost.setEntity(requestEntity);
-			httpPost.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
-																		   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
-			log.info("Executing request " + httpPost.getMethod() + " " + httpPost.getUri());
-			// SEND REQUEST
-
-			httpClient.execute(httpPost, response -> {
-				responseString.set(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
-				return responseString;
-			});
-
-			return responseString.get();
+			return executeRequest(httpClient, httpPost);
 		}
+	}
+
+	/**
+	 * Executes an HTTP request with authorization header and logging.
+	 *
+	 * @param httpClient The HTTP client to use for execution.
+	 * @param request    The HTTP request to execute.
+	 * @return The response body as a string.
+	 * @throws IOException If an I/O error occurs during the HTTP request.
+	 */
+	private String executeRequest(CloseableHttpClient httpClient, org.apache.hc.core5.http.ClassicHttpRequest request) throws IOException, URISyntaxException {
+		request.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
+																	   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
+		log.info("Executing request " + request.getMethod() + " " + request.getUri());
+
+		AtomicReference<String> responseString = new AtomicReference<>();
+		httpClient.execute(request, response -> {
+			responseString.set(EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
+			return responseString;
+		});
+
+		return responseString.get();
 	}
 	/**
 	 * Converts the input stream to a String.

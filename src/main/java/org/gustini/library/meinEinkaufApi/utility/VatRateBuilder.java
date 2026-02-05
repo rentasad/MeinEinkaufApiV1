@@ -41,7 +41,7 @@ public class VatRateBuilder
 			List<Double> vatRates = Arrays.stream(vatRatesProps.getProperty(key)
 															   .split(","))
 										  .map(Double::parseDouble)
-										  .collect(Collectors.toList());
+										  .toList();
 			if (vatRates.contains(vatRateProcentValue))
 			{
 				return Optional.of(vatRate);

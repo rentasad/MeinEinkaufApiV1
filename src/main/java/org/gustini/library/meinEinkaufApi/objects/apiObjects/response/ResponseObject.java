@@ -3,6 +3,8 @@
  */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.response;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONArray;
 
 /**
@@ -17,18 +19,35 @@ import org.json.JSONArray;
  *         Description:
  *
  */
+@Setter
 public class ResponseObject
 {
+
+    @Getter
     boolean success;
+
+    @Getter
     ResponseErrorObject[] errors;
+
+    @Getter
     JSONArray ordersJSONArray;
+
     boolean hasValues;
+
+    @Getter
     int limit;
+
+    @Getter
     int count;
+
+    @Getter
     int offset;
+
     /**
-     * @param success
-     * @param errors
+     * Constructs a new ResponseObject.
+     *
+     * @param success a boolean indicating whether the operation was successful
+     * @param errors an array of ResponseErrorObject instances representing the errors encountered
      */
     public ResponseObject(
                           boolean success,
@@ -36,40 +55,6 @@ public class ResponseObject
     {
         super();
         this.success = success;
-        this.errors = errors;
-    }
-
-    /**
-     * @return the success
-     */
-    public boolean isSuccess()
-    {
-        return success;
-    }
-
-    /**
-     * @param success
-     *            the success to set
-     */
-    public void setSuccess(boolean success)
-    {
-        this.success = success;
-    }
-
-    /**
-     * @return the errors
-     */
-    public ResponseErrorObject[] getErrors()
-    {
-        return errors;
-    }
-
-    /**
-     * @param errors
-     *            the errors to set
-     */
-    public void setErrors(ResponseErrorObject[] errors)
-    {
         this.errors = errors;
     }
 
@@ -81,78 +66,6 @@ public class ResponseObject
     public boolean hasValues()
     {
         return hasValues;
-    }
-
-    /**
-     * @param hasValues the hasValues to set
-     */
-    public void setHasValues(boolean hasValues)
-    {
-        this.hasValues = hasValues;
-    }
-
-    /**
-     * @return the limit
-     */
-    public int getLimit()
-    {
-        return limit;
-    }
-
-    /**
-     * @param limit the limit to set
-     */
-    public void setLimit(int limit)
-    {
-        this.limit = limit;
-    }
-
-    /**
-     * @return the count
-     */
-    public int getCount()
-    {
-        return count;
-    }
-
-    /**
-     * @param count the count to set
-     */
-    public void setCount(int count)
-    {
-        this.count = count;
-    }
-
-    /**
-     * @return the offset
-     */
-    public int getOffset()
-    {
-        return offset;
-    }
-
-    /**
-     * @param offset the offset to set
-     */
-    public void setOffset(int offset)
-    {
-        this.offset = offset;
-    }
-
-    /**
-     * @return the ordersJSONArray
-     */
-    public JSONArray getOrdersJSONArray()
-    {
-        return ordersJSONArray;
-    }
-
-    /**
-     * @param ordersJSONArray the ordersJSONArray to set
-     */
-    public void setOrdersJSONArray(JSONArray ordersJSONArray)
-    {
-        this.ordersJSONArray = ordersJSONArray;
     }
 
 

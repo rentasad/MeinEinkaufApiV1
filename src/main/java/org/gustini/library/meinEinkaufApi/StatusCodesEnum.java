@@ -56,38 +56,28 @@ public enum StatusCodesEnum
      * 503 Service Unavailable - Während planmäßiger Wartungsarbeiten wird dieser Status zurückgegeben. Die übermittelten Daten wurden nicht verarbeitet und ihr System muss den Request zu einem späteren Zeitpunkt erneut senden.
      */
     SERVICE_UNAVAILABLE_503;
-    
-    
+
+
     /**
-     * 
-     * Description: 
-     * 
-     * @param statusInt
-     * @return
-     * @throws MeinEinkaufRequestException
-     * Creation: 17.06.2019 by mst
+     * Converts an integer HTTP status code to its corresponding {@code StatusCodesEnum} representation.
+     * If the provided status code does not match any predefined enum value, an exception is thrown.
+     *
+     * @param statusInt the integer status code to be converted
+     * @return the corresponding {@code StatusCodesEnum} value for the given status code
+     * @throws MeinEinkaufRequestException if the provided status code is not recognized
      */
     public static StatusCodesEnum getStatusCodesEnumFromStatusInteger (final int statusInt) throws MeinEinkaufRequestException
     {
-        switch (statusInt)
-        {
-            case 200:
-                return StatusCodesEnum.OK_200;
-            case 201:
-                return StatusCodesEnum.CREATED_201;
-            case 400:
-                return StatusCodesEnum.BAD_REQUEST_400;
-            case 401:
-                return StatusCodesEnum.UNAUTHORIZED_401;
-            case 500:
-                return StatusCodesEnum.INTERNAL_SERVER_ERROR_500;
-            case 503:
-                return StatusCodesEnum.SERVICE_UNAVAILABLE_503;
-            case 422:
-                return StatusCodesEnum.UNPROCESSABLE_ENTITY_422;
-            default:
-                throw new MeinEinkaufRequestException("Unkown Statuscode returned: " + statusInt);
-        }
+        return switch (statusInt) {
+            case 200 -> StatusCodesEnum.OK_200;
+            case 201 -> StatusCodesEnum.CREATED_201;
+            case 400 -> StatusCodesEnum.BAD_REQUEST_400;
+            case 401 -> StatusCodesEnum.UNAUTHORIZED_401;
+            case 500 -> StatusCodesEnum.INTERNAL_SERVER_ERROR_500;
+            case 503 -> StatusCodesEnum.SERVICE_UNAVAILABLE_503;
+            case 422 -> StatusCodesEnum.UNPROCESSABLE_ENTITY_422;
+            default -> throw new MeinEinkaufRequestException("Unkown Statuscode returned: " + statusInt);
+        };
         
     }
     

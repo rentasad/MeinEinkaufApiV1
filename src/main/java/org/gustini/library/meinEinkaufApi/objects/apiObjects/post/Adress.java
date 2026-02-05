@@ -1,91 +1,77 @@
-/**
- * 
- */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
+import lombok.Data;
 import org.gustini.library.meinEinkaufApi.objects.enums.Salutation;
 
 /**
+ * Address information.
+ *
+ * Note: If the invoice address is in Switzerland or Liechtenstein, the street must be passed in the "street"
+ * property and the house number optionally in the "houseNumber" property. If the invoice address is not in
+ * Switzerland or Liechtenstein, the street address must be passed in the "addressLine" property according
+ * to the country format. The delivery address must necessarily be in Switzerland or Liechtenstein.
+ *
  * Gustini GmbH (2019)
  * Creation: 11.06.2019
- * application.meineinkauf
- * org.gustini.library.meinEinkaufApi.objects
- * 
+ *
  * @author Matthias Staud
- *
- *
- *         Description:
- * 
- *         Name Typ Beispiel Pflichtfeld Hinweis
- *         company String Muster GmbH Nein Die Firma des Kunden
- *         salutation Enum[String] Frau Ja Die Anrede des Kunden
- * 
- *         ["Herr", "Frau"]
- *         title String Dr. Nein Der Titel des Kunden
- *         firstName String Erika Ja Der Vorname des Kunden
- *         lastName String Musterfrau Ja Der Nachname des Kunden
- *         street String Musterstrasse Ja* Die Stra�e des Kunden
- * 
- *         Pflicht, wenn Adresse in der Schweiz oder Liechtenstein
- *         houseNumber String 28a Nein* Die Hausnummer des Kunden
- * 
- *         Nur zul�ssig, wenn Adresse in der Schweiz oder Liechtenstein
- *         addressLine String 140 Av. des Champs-�lys�es Nein* Die Adresszeile
- * 
- *         Pflicht, wenn Adresse nicht in der Schweiz oder Liechtenstein
- *         additionalAddressLine String Im Hinterhof Nein Zus�tzlicher Adresshinweis
- *         zip String 8005 Ja Die Postleitzahl des Kunden
- *         city String Z�rich Ja Die Stadt des Kunden
- *         state String Z�rich Nein* Der Verwaltungsbereich des Kunden (z.B. Kanton, Gemeinde, Bezirk, Insel, etc)
- * 
- *         Pflicht, wenn die Adresse in dem entsprechenden Land dies erfordert
- *         country String CH Nein Der L�ndercode nach ISO-3166-1 Alpha-2 Standard
- * 
- *         Default: CH
- * 
- *         Hinweis: Sollte die Rechnungsadresse in der Schweiz oder Liechtenstein liegen, muss die Stra�e in der Eigenschaft "street" �bergeben werden und die Hausnummer optional in der Eigenschaft
- *         "houseNumber". Falls die Rechnungsadresse nicht in der Schweiz oder Liechtenstein liegt, muss die Stra�enanschrift entsprechend des L�nderformats in der Eigenschaft "addressLine" �bergeben
- *         werden. Die Lieferadresse muss zwangsl�ufig in der Schweiz oder Liechtenstein liegen.
- *
  */
+@Data
 public class Adress
 {
-
+    /** The company name (optional) */
     private String company;
+
+    /** The salutation ["Herr", "Frau"] (required) */
     private final Salutation salutation;
+
+    /** The title, e.g. "Dr." (optional) */
     private String title;
+
+    /** The first name (required) */
     private final String firstName;
+
+    /** The last name (required) */
     private final String lastName;
+
+    /** The street name. Required if address is in Switzerland or Liechtenstein */
     private final String street;
+
+    /** The house number. Only allowed if address is in Switzerland or Liechtenstein */
     private final String houseNumber;
+
+    /** The address line. Required if address is not in Switzerland or Liechtenstein */
     private String addressLine;
+
+    /** Additional address information (optional) */
     private String additionalAddressLine;
+
+    /** The postal code (required) */
     private final String zip;
+
+    /** The city (required) */
     private final String city;
+
+    /** The administrative area (canton, municipality, district, island, etc.).
+     * Required if the address in the corresponding country requires it */
     private String state;
-    /**
-     * Der L�ndercode nach ISO-3166-1 Alpha-2 Standard
-     */
-    private String country = "CH"; // DEFAULT
 
+    /** The country code according to ISO-3166-1 Alpha-2 standard. Default: CH */
+    private String country = "CH";
 
     /**
-     * @param salutation
-     * @param firstName
-     * @param lastName
-     * @param street
-     * @param houseNumber
-     * @param zip
-     * @param city
+     * Constructor for Adress
+     *
+     * @param salutation The salutation (e.g., Herr, Frau)
+     * @param firstName The first name
+     * @param lastName The last name
+     * @param street The street name
+     * @param houseNumber The house number
+     * @param zip The postal code
+     * @param city The city
      */
-    public Adress(
-                  Salutation salutation,
-                  String firstName,
-                  String lastName,
-                  String street,
-                  String houseNumber,
-                  String zip,
-                  String city)
+    public Adress(Salutation salutation, String firstName, String lastName,
+                  String street, String houseNumber, String zip, String city)
     {
         super();
         this.salutation = salutation;
@@ -96,157 +82,4 @@ public class Adress
         this.zip = zip;
         this.city = city;
     }
-
-    /**
-     * @return the company
-     */
-    public String getCompany()
-    {
-        return company;
-    }
-
-    /**
-     * @param company the company to set
-     */
-    public void setCompany(String company)
-    {
-        this.company = company;
-    }
-
-    /**
-     * @return the title
-     */
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    /**
-     * @return the addressLine
-     */
-    public String getAddressLine()
-    {
-        return addressLine;
-    }
-
-    /**
-     * @param addressLine the addressLine to set
-     */
-    public void setAddressLine(String addressLine)
-    {
-        this.addressLine = addressLine;
-    }
-
-    /**
-     * @return the additionalAddressLine
-     */
-    public String getAdditionalAddressLine()
-    {
-        return additionalAddressLine;
-    }
-
-    /**
-     * @param additionalAddressLine the additionalAddressLine to set
-     */
-    public void setAdditionalAddressLine(String additionalAddressLine)
-    {
-        this.additionalAddressLine = additionalAddressLine;
-    }
-
-    /**
-     * @return the state
-     */
-    public String getState()
-    {
-        return state;
-    }
-
-    /**
-     * @param state the state to set
-     */
-    public void setState(String state)
-    {
-        this.state = state;
-    }
-
-    /**
-     * @return the country
-     */
-    public String getCountry()
-    {
-        return country;
-    }
-
-    /**
-     * @param country the country to set
-     */
-    public void setCountry(String country)
-    {
-        this.country = country;
-    }
-
-    /**
-     * @return the salutation
-     */
-    public Salutation getSalutation()
-    {
-        return salutation;
-    }
-
-    /**
-     * @return the firstName
-     */
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
-    /**
-     * @return the lastName
-     */
-    public String getLastName()
-    {
-        return lastName;
-    }
-
-    /**
-     * @return the street
-     */
-    public String getStreet()
-    {
-        return street;
-    }
-
-    /**
-     * @return the houseNumber
-     */
-    public String getHouseNumber()
-    {
-        return houseNumber;
-    }
-
-    /**
-     * @return the zip
-     */
-    public String getZip()
-    {
-        return zip;
-    }
-
-    /**
-     * @return the city
-     */
-    public String getCity()
-    {
-        return city;
-    }
-
 }

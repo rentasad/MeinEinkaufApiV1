@@ -1,52 +1,34 @@
-/**
- * 
- */
 package org.gustini.library.meinEinkaufApi.objects.apiObjects.post;
 
+import lombok.Data;
+
 /**
- * TrackingResponse-Informationen (TrackingResponse-Object)
+ * Tracking information for shipments.
+ * 
  * ONLY FOR POST-REQUEST
+ * 
  * @author Matthias Staud
- *
- *
- * Description:
- *
  */
+@Data
 public class Tracking
 {
+    /** The German carrier service of the shipment from you to us */
     private final String carrier;
+    
+    /** The German tracking number of the shipment from you to us. 
+     * This is used to identify the incoming shipment for the order */
     private final String trackingNumber;
 
     /**
-     * @param carrier  Der deutsche Lieferdienst der Sendung von Ihnen zu uns.
-     * @param trackingNumber Die deutsche Trackingnummer der Sendung von Ihnen zu uns. Dies dient für uns zur Identifizierung der eingehenden Sendung zur Bestellung
+     * Constructor for Tracking
+     * 
+     * @param carrier The German carrier service of the shipment from you to us
+     * @param trackingNumber The German tracking number of the shipment from you to us
      */
-    public Tracking(
-                    String carrier,
-                    String trackingNumber)
+    public Tracking(String carrier, String trackingNumber)
     {
         super();
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
     }
-
-    /**
-     * 
-     * Der deutsche Lieferdienst der Sendung von Ihnen zu uns.
-     * @return the carrier
-     */
-    public String getCarrier()
-    {
-        return carrier;
-    }
-
-    /**
-     * Die deutsche Trackingnummer der Sendung von Ihnen zu uns. Dies dient für uns zur Identifizierung der eingehenden Sendung zur Bestellung
-     * @return the trackingNumber
-     */
-    public String getTrackingNumber()
-    {
-        return trackingNumber;
-    } 
-
 }
