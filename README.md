@@ -269,7 +269,7 @@ The library includes tests for the MeinEinkauf test environment:
 
 ## 📋 Changelog
 
-### Version 1.3.0 (2024-02-05)
+### Version 1.3.0 (2026-02-05)
 - ✨ Updated to Java 17
 - 🔒 Security update: Logback 1.5.27 (fixes CVE-2025-11226)
 - 🏗️ Refactored all API objects with Lombok @Data
