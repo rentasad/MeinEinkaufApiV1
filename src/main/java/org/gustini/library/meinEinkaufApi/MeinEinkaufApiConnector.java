@@ -95,7 +95,7 @@ public class MeinEinkaufApiConnector
 	private String executeRequest(CloseableHttpClient httpClient, org.apache.hc.core5.http.ClassicHttpRequest request) throws IOException, URISyntaxException {
 		request.addHeader("Authorization", "Basic " + java.util.Base64.getEncoder()
 																	   .encodeToString((this.username + ":" + this.apiKey).getBytes()));
-		log.info("Executing request " + request.getMethod() + " " + request.getUri());
+		// log.info("Executing request " + request.getMethod() + " " + request.getUri());
 
 		AtomicReference<String> responseString = new AtomicReference<>();
 		httpClient.execute(request, response -> {

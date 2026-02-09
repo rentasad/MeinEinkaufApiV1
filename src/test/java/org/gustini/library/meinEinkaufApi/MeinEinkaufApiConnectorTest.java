@@ -1,5 +1,6 @@
 package org.gustini.library.meinEinkaufApi;
 
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.gustini.library.meinEinkaufApi.objects.apiObjects.post.OrderTest;
 import org.gustini.library.meinEinkaufApi.utility.JsonBuilder;
@@ -15,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author mst
  */
-@Slf4j
 public class MeinEinkaufApiConnectorTest
 {
 
@@ -35,7 +35,6 @@ public class MeinEinkaufApiConnectorTest
 
 		MeinEinkaufApiConnector apiConnector = new MeinEinkaufApiConnector(username, apiKey, apiTestUrl);
 
-		log.info("Logging-Test");
 		String response = apiConnector.sendGetRequest(param)
 									  .trim();
 		String assertString = "{\"echo\":\"HelloWorld\",\"errors\":[],\"success\":true}";
